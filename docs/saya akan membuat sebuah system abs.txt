@@ -1,0 +1,31 @@
+saya akan membuat sebuah system absensi dengan face recognition dan juga menggunakan radius lokasi, memiliki 2 role (bisa pengembangan)
+yaitu ada admin dan karyawan,
+
+
+berikut beberapa hak akses dari masing masing role tersebut:
+
+1. Role Admin
+ - Dashboard (Statiska Dari Keseluruhan)
+ - Karyawan (CRUD Data)
+ - Lokasi Absensi (Dinamis)
+ - Data Absensi (Data Absensi semua karyawan)
+ - Jam Kerja (Menentukan Absen masuk dan pulang)
+ - Laporan (Data Dari Keseluruhan)
+
+2. Role Karyawan
+ - Dashboard (Statiska Dari Keseluruhan)
+ - Absen (absen masuk / keluar)
+ - Riwayat Absen (History Absensi)
+ - Profile
+ - Bantuan (Informasi untuk panduan)
+
+Hanya beberapa menu di atas
+
+terus ada beberapa table yang di perlukan untuk system tersebut diantaranya:
+1. table users (
+	id (primary)
+	id_card (int)
+	
+	email (email)
+	password (varchar)
+	
