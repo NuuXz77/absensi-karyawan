@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'role',
+        'harus_mengganti_password',
+        'status',
     ];
 
     /**
@@ -44,5 +47,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // relasi ke table karyawans
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class);
     }
 }

@@ -22,10 +22,89 @@ berikut beberapa hak akses dari masing masing role tersebut:
 Hanya beberapa menu di atas
 
 terus ada beberapa table yang di perlukan untuk system tersebut diantaranya:
-1. table users (
-	id (primary)
-	id_card (int)
-	
-	email (email)
-	password (varchar)
-	
+1. table users :
+- id (primary)
+- username (varchar) -> diisi otomatis sama create karyawan
+- password (varchar) -> otomatis juga
+- role (enum(admin,karyawan))
+- harus_mengganti_password (boolean) -> true/false
+- status (active/inactive)
+- timestamp 
+
+2. table karyawan :
+- id (primary)
+- user_id (relasi ke  tb users)
+- id_card (unique)
+- nip (unique, nullable)
+- nama_lengkap (varchar)
+- tanggal_lahir (date)
+- foto_karyawan (varchar) 
+- jabatan (varchar) -> bisa dibuat table jabatan
+- departemen (varchar)
+- status (active/inactive)
+- timestamp
+
+3. table lokasi :
+- id (primary)
+- nama_lokasi (varchar)
+- latitude (decimal)
+- longtitude (decimal)
+- radius_meter (int)
+- status (active/inactive)
+
+4. table absensi :
+- id (primary)
+- karyawan_id (relasi table karyawan)
+- lokasi_id (relasi table lokasi)
+- tanggal (date)
+- jam_masuk (time)
+- jam_pulang (time)
+- lat_masuk (decimal)
+- long_masuk (decimal)
+- lat_keluar (decimal)
+- long_keluar (decimal)
+- foto_masuk (varchar)
+- foto_keluar (varchar)
+- status (Enum(tepat_waktu, terlambat, izin, cuti, alpha))
+- timestamps
+UNIQUE (karyawan_id, tanggal)
+
+5. table wajah_karyawan :
+- id (primary)
+- karyawan_id (relasi ke table karyawan)
+- embedding (longtext/json)
+- model_version (varchar)
+- timestamps
+
+6. table izin :
+- id (primary)
+- karyawan_id (relasi ke table karyawan)
+- tanggal (date)
+- jenis_izin ENUM('sakit','keperluan_pribadi','dinas','lainnya')
+- keterangan (text)
+- bukti_foto (varchar) -- surat dokter dll
+- status ENUM('pending','disetujui','ditolak')
+- disetujui_oleh (admin_id)
+- created_at
+- updated_at
+
+7. table cuti :
+- id (primary)
+- karyawan_id (relasi ke table karyawan)
+- tanggal_mulai (date)
+- tanggal_selesai (date)
+- jumlah_hari (int)
+- jenis_cuti ENUM('tahunan','khusus')
+- keterangan (text)
+- bukti_foto (varchar)
+- status ENUM('pending','disetujui','ditolak')
+- disetujui_oleh (admin_id)
+- timestamps
+
+8. table saldo_cuti :
+- id (primary)
+- karyawan_id (relasi ke table karyawan)
+- total_cuti (int)
+- sisa_cuti (int)
+- tahun (int)
+UNIQUE(karyawan_id, tahun)
