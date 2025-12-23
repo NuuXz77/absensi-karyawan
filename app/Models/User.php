@@ -19,11 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'email',
         'password',
         'role',
-        'harus_mengganti_password',
         'status',
+        'harus_mengganti_password',
     ];
 
     /**
@@ -53,5 +52,15 @@ class User extends Authenticatable
     public function karyawan()
     {
         return $this->hasOne(Karyawan::class);
+    }
+
+    public function izinDisetujui()
+    {
+        return $this->hasMany(Izin::class, 'disetujui_oleh');
+    }
+
+    public function cutiDisetujui()
+    {
+        return $this->hasMany(Cuti::class, 'disetujui_oleh');
     }
 }

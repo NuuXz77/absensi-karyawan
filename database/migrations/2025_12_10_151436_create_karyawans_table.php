@@ -16,10 +16,14 @@ return new class extends Migration {
             $table->string('id_card')->unique();
             $table->string('nip')->unique()->nullable();
             $table->string('nama_lengkap');
+            $table->string('email')->unique();
             $table->date('tanggal_lahir')->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
+            $table->string('no_telepon')->nullable();
             $table->string('foto_karyawan')->nullable();
             $table->string('jabatan')->nullable();
             $table->string('departemen')->nullable();
+            $table->string('alamat')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

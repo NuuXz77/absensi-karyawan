@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawan')->cascadeOnDelete();
 
-            $table->date('tanggal');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
             $table->enum('jenis_izin', ['sakit', 'keperluan_pribadi', 'dinas', 'lainnya']);
             $table->text('keterangan')->nullable();
             $table->string('bukti_foto')->nullable();

@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('wajah_karyawan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawan')->cascadeOnDelete();
-            $table->longText('embedding');
-            $table->string('model_version');
+            $table->string('foto_path');
+            $table->longText('face_embedding');
             $table->timestamps();
         });
     }

@@ -37,10 +37,14 @@ terus ada beberapa table yang di perlukan untuk system tersebut diantaranya:
 - id_card (unique)
 - nip (unique, nullable)
 - nama_lengkap (varchar)
+- email (unique)
 - tanggal_lahir (date)
 - foto_karyawan (varchar) 
+- no_telepon (tel)
+- jenis_kelamin (enum)
 - jabatan (varchar) -> bisa dibuat table jabatan
 - departemen (varchar)
+- alamat (varchar)
 - status (active/inactive)
 - timestamp
 
@@ -56,6 +60,7 @@ terus ada beberapa table yang di perlukan untuk system tersebut diantaranya:
 - id (primary)
 - karyawan_id (relasi table karyawan)
 - lokasi_id (relasi table lokasi)
+- jadwal_id (relasi table jadwal_kerja)  
 - tanggal (date)
 - jam_masuk (time)
 - jam_pulang (time)
@@ -108,3 +113,23 @@ UNIQUE (karyawan_id, tanggal)
 - sisa_cuti (int)
 - tahun (int)
 UNIQUE(karyawan_id, tahun)
+
+9. table shift :
+- id (primary)
+- nama_shift (varchar)           -- Shift Pagi, Shift Malam
+- jam_masuk (time)
+- jam_pulang (time)
+- toleransi_telat (int)          -- menit (contoh: 10)
+- toleransi_pulang_awal (int)    -- menit (opsional)
+- status (active/inactive)
+- timestamps
+
+10. table jadwal_kerja :
+- id (primary)
+- karyawan_id (relasi ke table karyawan)
+- shift_id (relasi ke table shift)
+- tanggal (date)
+- status (enum('aktif','libur','cuti'))
+- timestamps
+
+UNIQUE (karyawan_id, tanggal)
