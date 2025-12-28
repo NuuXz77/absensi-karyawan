@@ -37,7 +37,7 @@
                                         class="input w-full validator tabular-nums input-bordered flex items-center gap-2 bg-base-200 cursor-not-allowed @error('id_card') input-error @enderror">
                                         <x-heroicon-o-identification class="w-4 h-4 opacity-70" />
                                         <input type="text" wire:model="id_card" readonly
-                                            placeholder="Pilih Jabatan & Departemen" class="cursor-not-allowed" />
+                                            placeholder="Pilih Jabatan" class="cursor-not-allowed" />
                                     </label>
                                     <p class="text-xs text-success mt-1" x-show="$wire.id_card">✓ ID Card: <strong x-text="$wire.id_card"></strong></p>
                                     @error('id_card')
@@ -163,7 +163,7 @@
 
                                 {{-- Preview State with Integrated Loading --}}
                                 @if ($foto_karyawan)
-                                    <div class="card bg-base-200 border border-base-300 overflow-hidden" x-data="{ faceStatus: 'detecting', faceMessage: 'Mendeteksi wajah...', faceDimension: 0 }">
+                                    <div class="card bg-base-200 border border-base-300 overflow-hidden" x-data="{ faceStatus: 'detecting', faceMessage: 'Mendeteksi wajah...', faceDimension: 0, progress: 0 }">
                                         <figure
                                             class="relative bg-base-300 flex items-center justify-center max-h-[400px] min-h-[300px]">
                                             {{-- Shadow Gradient Overlay --}}
@@ -171,17 +171,25 @@
                                                 class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent pointer-events-none z-[5]">
                                             </div>
 
+                                            {{-- Canvas untuk bounding box - z-index lebih tinggi --}}
+                                            <canvas id="faceCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-[15]" style="object-fit: contain;"></canvas>
+
                                             <img src="{{ $foto_karyawan->temporaryUrl() }}" alt="Preview" id="previewImage"
-                                                class="max-w-full max-h-[400px] w-auto h-auto object-contain" 
+                                                class="max-w-full max-h-[400px] w-auto h-auto object-contain z-[1]" 
                                                 x-init="setTimeout(() => { 
                                                     if (typeof window.processFaceRecognition === 'function') {
-                                                        window.processFaceRecognition((status, message, dimension) => {
-                                                            faceStatus = status;
-                                                            faceMessage = message;
-                                                            faceDimension = dimension;
-                                                        });
+                                                        window.processFaceRecognition(
+                                                            (status, message, dimension) => {
+                                                                faceStatus = status;
+                                                                faceMessage = message;
+                                                                faceDimension = dimension;
+                                                            },
+                                                            (percent) => {
+                                                                progress = percent;
+                                                            }
+                                                        );
                                                     }
-                                                }, 2000)" />
+                                                }, 500)" />
 
                                             {{-- Title and Close Button Container --}}
                                             <div
@@ -216,13 +224,19 @@
                                             {{-- Face Recognition Status --}}
                                             <div class="absolute bottom-3 left-3 right-3 z-20">
                                                 {{-- Loading State --}}
-                                                <div x-show="faceStatus === 'detecting'" class="alert alert-warning py-2 text-sm">
+                                                <div x-show="faceStatus === 'detecting'" class="alert alert-warning py-2 text-sm shadow-lg">
                                                     <span class="loading loading-spinner loading-sm"></span>
-                                                    <span x-text="faceMessage"></span>
+                                                    <div class="flex-1">
+                                                        <p class="font-semibold" x-text="faceMessage"></p>
+                                                        <div class="w-full bg-base-300 rounded-full h-2 mt-1">
+                                                            <div class="bg-warning h-2 rounded-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                                                        </div>
+                                                        <p class="text-xs mt-1" x-text="'Progress: ' + progress + '%'"></p>
+                                                    </div>
                                                 </div>
                                                 
                                                 {{-- Success State --}}
-                                                <div x-show="faceStatus === 'success'" class="alert alert-success py-2 text-sm">
+                                                <div x-show="faceStatus === 'success'" class="alert alert-success py-2 text-sm shadow-lg">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                     </svg>
@@ -233,7 +247,7 @@
                                                 </div>
                                                 
                                                 {{-- Error State --}}
-                                                <div x-show="faceStatus === 'error'" class="alert alert-error py-2 text-sm">
+                                                <div x-show="faceStatus === 'error'" class="alert alert-error py-2 text-sm shadow-lg">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                                     </svg>
@@ -305,44 +319,24 @@
                                 </fieldset>
 
                                 {{-- Jabatan --}}
-                                <fieldset>
+                                <fieldset class="lg:col-span-2">
                                     <legend class="fieldset-legend">Jabatan</legend>
                                     <label class="w-full validator">
                                         <select wire:model.live="jabatan" required
                                             class="select w-full input-bordered @error('jabatan') select-error @enderror">
                                             <option value="" disabled selected>Pilih Jabatan</option>
-                                            <option value="Staff">Staff</option>
-                                            <option value="Supervisor">Supervisor</option>
-                                            <option value="Manager">Manager</option>
-                                            <option value="Director">Director</option>
-                                            <option value="Junior">Junior</option>
-                                            <option value="Senior">Senior</option>
+                                            @foreach ($jabatans as $jabatanItem)
+                                                <option value="{{ $jabatanItem->id }}">
+                                                    {{ $jabatanItem->nama_jabatan }}
+                                                    @if($jabatanItem->departemen)
+                                                        - {{ $jabatanItem->departemen->nama_departemen }}
+                                                    @endif
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </label>
                                     <p class="validator-hint hidden">Jabatan wajib dipilih</p>
                                     @error('jabatan')
-                                        <label class="label">
-                                            <span class="label-text-alt text-error">{{ $message }}</span>
-                                        </label>
-                                    @enderror
-                                </fieldset>
-
-                                {{-- Departemen --}}
-                                <fieldset>
-                                    <legend class="fieldset-legend">Departemen</legend>
-                                    <label class="w-full validator">
-                                        <select wire:model.live="departemen" required
-                                            class="select w-full input-bordered @error('departemen') select-error @enderror">
-                                            <option value="" disabled selected>Pilih Departemen</option>
-                                            <option value="IT">IT</option>
-                                            <option value="HR">HR</option>
-                                            <option value="Finance">Finance</option>
-                                            <option value="Marketing">Marketing</option>
-                                            <option value="Operations">Operations</option>
-                                        </select>
-                                    </label>
-                                    <p class="validator-hint hidden">Departemen wajib dipilih</p>
-                                    @error('departemen')
                                         <label class="label">
                                             <span class="label-text-alt text-error">{{ $message }}</span>
                                         </label>
@@ -505,39 +499,246 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Global variables
         window.faceAPIModelsLoaded = false;
+        window.faceAPILoading = false;
         
-        // Load face-api models
-        async function loadFaceAPIModels() {
+        // Load face-api models with timeout and progress
+        async function loadFaceAPIModels(progressCallback) {
             if (window.faceAPIModelsLoaded) return true;
+            if (window.faceAPILoading) {
+                // Wait for loading to complete
+                await new Promise(resolve => {
+                    const checkInterval = setInterval(() => {
+                        if (window.faceAPIModelsLoaded || !window.faceAPILoading) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 100);
+                });
+                return window.faceAPIModelsLoaded;
+            }
+
+            window.faceAPILoading = true;
             
             const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+            
             try {
-                await Promise.all([
+                console.log('🔄 Loading Face-API models...');
+                if (progressCallback) progressCallback(10);
+                
+                // Check if face-api is available
+                if (typeof faceapi === 'undefined') {
+                    throw new Error('face-api library not loaded');
+                }
+                
+                if (progressCallback) progressCallback(20);
+                
+                // Load models with timeout
+                const loadPromise = Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
                     faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
                 ]);
+                
+                if (progressCallback) progressCallback(40);
+                
+                // Set 30 second timeout for model loading
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Model loading timeout')), 30000)
+                );
+                
+                await Promise.race([loadPromise, timeoutPromise]);
+                
                 console.log('✓ Face-API models loaded successfully');
                 window.faceAPIModelsLoaded = true;
+                window.faceAPILoading = false;
+                
+                if (progressCallback) progressCallback(60);
+                
                 return true;
             } catch (error) {
                 console.error('✗ Error loading Face-API models:', error);
+                window.faceAPILoading = false;
                 return false;
             }
         }
 
+        // Draw bounding box on detected face (persistent)
+        function drawFaceBox(canvas, detection, imageElement) {
+            const ctx = canvas.getContext('2d');
+            
+            // Get image dimensions and position
+            const imgRect = imageElement.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            
+            // Set canvas size to match container
+            canvas.width = canvasRect.width;
+            canvas.height = canvasRect.height;
+            
+            // Calculate scale factors
+            const scaleX = imgRect.width / imageElement.naturalWidth;
+            const scaleY = imgRect.height / imageElement.naturalHeight;
+            
+            // Calculate offset to center image
+            const offsetX = (canvasRect.width - imgRect.width) / 2;
+            const offsetY = (canvasRect.height - imgRect.height) / 2;
+            
+            // Don't clear canvas - we want it to persist
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw bounding box
+            const box = detection.detection.box;
+            const x = (box.x * scaleX) + offsetX;
+            const y = (box.y * scaleY) + offsetY;
+            const width = box.width * scaleX;
+            const height = box.height * scaleY;
+            
+            // Draw semi-transparent background for box
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.15)';
+            ctx.fillRect(x, y, width, height);
+            
+            // Draw main box with glow effect
+            ctx.shadowColor = '#00ff00';
+            ctx.shadowBlur = 15;
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(x, y, width, height);
+            
+            // Reset shadow for other drawings
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            
+            // Draw corners with thicker lines
+            const cornerLength = 25;
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            
+            // Top-left
+            ctx.beginPath();
+            ctx.moveTo(x, y + cornerLength);
+            ctx.lineTo(x, y);
+            ctx.lineTo(x + cornerLength, y);
+            ctx.stroke();
+            
+            // Top-right
+            ctx.beginPath();
+            ctx.moveTo(x + width - cornerLength, y);
+            ctx.lineTo(x + width, y);
+            ctx.lineTo(x + width, y + cornerLength);
+            ctx.stroke();
+            
+            // Bottom-left
+            ctx.beginPath();
+            ctx.moveTo(x, y + height - cornerLength);
+            ctx.lineTo(x, y + height);
+            ctx.lineTo(x + cornerLength, y + height);
+            ctx.stroke();
+            
+            // Bottom-right
+            ctx.beginPath();
+            ctx.moveTo(x + width - cornerLength, y + height);
+            ctx.lineTo(x + width, y + height);
+            ctx.lineTo(x + width, y + height - cornerLength);
+            ctx.stroke();
+            
+            // Draw label with background
+            const labelText = '✓ Wajah Terdeteksi';
+            ctx.font = 'bold 18px Arial';
+            const textMetrics = ctx.measureText(labelText);
+            const textWidth = textMetrics.width;
+            const textHeight = 24;
+            const padding = 10;
+            
+            // Label background with rounded corners
+            const labelX = x - 2;
+            const labelY = y - textHeight - padding * 2;
+            const labelWidth = textWidth + padding * 2;
+            const labelHeight = textHeight + padding;
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.beginPath();
+            ctx.roundRect(labelX, labelY, labelWidth, labelHeight, 6);
+            ctx.fill();
+            
+            // Label text
+            ctx.fillStyle = '#000000';
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText(labelText, x + padding - 2, y - padding - 2);
+            
+            // Store box data for persistence
+            canvas.dataset.hasBox = 'true';
+            canvas.dataset.detectionData = JSON.stringify({
+                box: detection.detection.box,
+                naturalWidth: imageElement.naturalWidth,
+                naturalHeight: imageElement.naturalHeight
+            });
+            
+            console.log('✓ Bounding box drawn and persisted on canvas');
+        }
+        
+        // Continuously redraw face box to ensure it stays visible
+        function keepBoxVisible() {
+            const canvas = document.getElementById('faceCanvas');
+            const img = document.getElementById('previewImage');
+            
+            if (canvas && img && canvas.dataset.hasBox === 'true') {
+                try {
+                    const data = JSON.parse(canvas.dataset.detectionData);
+                    const detection = { detection: { box: data.box } };
+                    
+                    // Redraw every frame to keep it visible
+                    requestAnimationFrame(() => {
+                        drawFaceBox(canvas, detection, img);
+                        // Keep checking and redrawing
+                        setTimeout(keepBoxVisible, 100);
+                    });
+                } catch (e) {
+                    console.log('Could not maintain box visibility');
+                }
+            } else if (canvas && canvas.dataset.hasBox === 'true') {
+                // Keep trying if image not ready yet
+                setTimeout(keepBoxVisible, 100);
+            }
+        }
+        
+        // Redraw face box on window resize (to keep box visible)
+        function setupCanvasPersistence() {
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    const canvas = document.getElementById('faceCanvas');
+                    const img = document.getElementById('previewImage');
+                    
+                    if (canvas && img && canvas.dataset.hasBox === 'true') {
+                        try {
+                            const data = JSON.parse(canvas.dataset.detectionData);
+                            const detection = { detection: { box: data.box } };
+                            drawFaceBox(canvas, detection, img);
+                        } catch (e) {
+                            console.log('Could not redraw box on resize');
+                        }
+                    }
+                }, 250);
+            });
+        }
+
         // Detect face and get embedding
-        async function detectFaceEmbedding(imageElement) {
+        async function detectFaceEmbedding(imageElement, canvas) {
             try {
                 const detection = await faceapi
                     .detectSingleFace(imageElement, new faceapi.TinyFaceDetectorOptions({
-                        inputSize: 512,
+                        inputSize: 416,
                         scoreThreshold: 0.5
                     }))
                     .withFaceLandmarks()
                     .withFaceDescriptor();
 
                 if (detection && detection.descriptor) {
+                    // Draw bounding box on canvas
+                    if (canvas) {
+                        drawFaceBox(canvas, detection, imageElement);
+                    }
                     return Array.from(detection.descriptor);
                 }
                 return null;
@@ -548,8 +749,9 @@
         }
 
         // Process face recognition when image is loaded
-        window.processFaceRecognition = async function(callback) {
+        window.processFaceRecognition = async function(statusCallback, progressCallback) {
             const previewImage = document.getElementById('previewImage');
+            const canvas = document.getElementById('faceCanvas');
             
             if (!previewImage) {
                 console.log('Preview image not found');
@@ -557,54 +759,119 @@
             }
 
             // Set detecting status
-            if (callback) callback('detecting', 'Mendeteksi wajah...', 0);
+            if (statusCallback) statusCallback('detecting', 'Memuat model AI...', 0);
+            if (progressCallback) progressCallback(0);
 
-            // Ensure models are loaded
-            if (!window.faceAPIModelsLoaded) {
-                console.log('Loading Face-API models...');
-                await loadFaceAPIModels();
-            }
+            // Set 60 second timeout
+            const timeoutId = setTimeout(() => {
+                if (statusCallback) {
+                    statusCallback('error', 'Timeout: Wajah tidak terdeteksi dalam 60 detik', 0);
+                }
+                console.log('✗ Face detection timeout after 60 seconds');
+            }, 60000);
 
-            if (!window.faceAPIModelsLoaded) {
-                console.log('Failed to load models');
-                if (callback) callback('error', 'Gagal memuat model Face Recognition', 0);
-                return;
-            }
+            try {
+                // Ensure models are loaded
+                if (!window.faceAPIModelsLoaded) {
+                    console.log('Loading Face-API models...');
+                    if (statusCallback) statusCallback('detecting', 'Mengunduh model AI...', 0);
+                    
+                    const modelsLoaded = await loadFaceAPIModels(progressCallback);
+                    
+                    if (!modelsLoaded) {
+                        clearTimeout(timeoutId);
+                        console.log('Failed to load models');
+                        if (statusCallback) statusCallback('error', 'Gagal memuat model Face Recognition', 0);
+                        return;
+                    }
+                }
 
-            // Wait for image to load
-            if (!previewImage.complete) {
-                await new Promise((resolve) => {
-                    previewImage.onload = resolve;
-                    setTimeout(resolve, 5000); // timeout after 5s
-                });
-            }
+                if (progressCallback) progressCallback(70);
+                if (statusCallback) statusCallback('detecting', 'Menunggu gambar siap...', 0);
 
-            // Add delay to ensure image is ready
-            await new Promise(resolve => setTimeout(resolve, 800));
+                // Wait for image to load with timeout
+                if (!previewImage.complete) {
+                    await Promise.race([
+                        new Promise((resolve) => {
+                            previewImage.onload = resolve;
+                        }),
+                        new Promise((resolve) => setTimeout(resolve, 10000))
+                    ]);
+                }
 
-            console.log('Starting face detection...');
+                // Verify image is loaded
+                if (!previewImage.complete || previewImage.naturalWidth === 0) {
+                    clearTimeout(timeoutId);
+                    if (statusCallback) statusCallback('error', 'Gambar gagal dimuat', 0);
+                    return;
+                }
 
-            // Detect face
-            const embedding = await detectFaceEmbedding(previewImage);
+                if (progressCallback) progressCallback(80);
+                if (statusCallback) statusCallback('detecting', 'Menganalisis wajah...', 0);
 
-            if (embedding && embedding.length > 0) {
-                // Send embedding to Livewire
-                Livewire.dispatch('face-detected', { embedding: embedding });
-                
-                // Update status to success
-                if (callback) callback('success', 'Wajah berhasil terdeteksi!', embedding.length);
-                
-                console.log('✓ Face detected, embedding length:', embedding.length);
-            } else {
-                // Update status to error
-                if (callback) callback('error', 'Wajah tidak terdeteksi', 0);
-                
-                console.log('✗ No face detected');
+                // Add delay to ensure image is ready
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                console.log('Starting face detection...');
+                if (progressCallback) progressCallback(90);
+
+                // Detect face with canvas
+                const embedding = await detectFaceEmbedding(previewImage, canvas);
+
+                clearTimeout(timeoutId);
+
+                if (embedding && embedding.length > 0) {
+                    // Send embedding to Livewire
+                    if (typeof Livewire !== 'undefined') {
+                        Livewire.dispatch('face-detected', { embedding: embedding });
+                    }
+                    
+                    if (progressCallback) progressCallback(100);
+                    
+                    // Update status to success
+                    if (statusCallback) statusCallback('success', 'Wajah berhasil terdeteksi!', embedding.length);
+                    
+                    console.log('✓ Face detected, embedding length:', embedding.length);
+                    
+                    // Start keeping the box visible continuously
+                    setTimeout(() => {
+                        keepBoxVisible();
+                    }, 500);
+                } else {
+                    if (progressCallback) progressCallback(100);
+                    
+                    // Update status to error
+                    if (statusCallback) statusCallback('error', 'Wajah tidak terdeteksi pada foto', 0);
+                    
+                    console.log('✗ No face detected');
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                console.error('✗ Face recognition error:', error);
+                if (statusCallback) statusCallback('error', 'Terjadi kesalahan: ' + error.message, 0);
             }
         };
 
-        // Initialize - load models
-        loadFaceAPIModels();
+        // Initialize - preload models in background
+        console.log('🚀 Initializing Face Recognition...');
+        
+        // Setup canvas persistence on resize
+        setupCanvasPersistence();
+        
+        // Check if face-api is loaded
+        if (typeof faceapi !== 'undefined') {
+            loadFaceAPIModels((progress) => {
+                console.log(`Model loading progress: ${progress}%`);
+            }).then(success => {
+                if (success) {
+                    console.log('✓ Face-API ready');
+                } else {
+                    console.log('✗ Face-API initialization failed');
+                }
+            });
+        } else {
+            console.error('✗ face-api library not found. Please check CDN link.');
+        }
     });
 
     // Handle copy password with Livewire

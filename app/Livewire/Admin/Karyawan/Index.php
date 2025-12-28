@@ -19,6 +19,7 @@ class Index extends Component
     public $search = '';
     public $filterStatus = '';
     public $filterDepartemen = '';
+    public $filterJabatan = '';
 
     // Sorting
     public $sortField = 'nama_lengkap';
@@ -34,6 +35,7 @@ class Index extends Component
         'search' => ['except' => ''],
         'filterStatus' => ['except' => ''],
         'filterDepartemen' => ['except' => ''],
+        'filterJabatan' => ['except' => ''],
         'sortField' => ['except' => 'nama_lengkap'],
         'sortDirection' => ['except' => 'asc'],
     ];
@@ -49,6 +51,11 @@ class Index extends Component
     }
 
     public function updatingFilterDepartemen()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterJabatan()
     {
         $this->resetPage();
     }
@@ -70,7 +77,7 @@ class Index extends Component
 
     public function resetFilters()
     {
-        $this->reset(['search', 'filterStatus', 'filterDepartemen']);
+        $this->reset(['search', 'filterStatus', 'filterDepartemen', 'filterJabatan']);
         $this->resetPage();
     }
 
@@ -81,6 +88,7 @@ class Index extends Component
 
     protected $listeners = [
         'karyawan-created' => 'handleKaryawanCreated',
+        'karyawan-deleted' => '$refresh',
         'modal-closed' => 'handleModalClosed',
     ];
 
@@ -121,26 +129,47 @@ class Index extends Component
     public function render()
     {
         $karyawans = Karyawan::query()
-            ->with('user')
+            ->with(['user', 'jabatan.departemen', 'departemen'])
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('nama_lengkap', 'like', '%' . $this->search . '%')
                         ->orWhere('nip', 'like', '%' . $this->search . '%')
-                        ->orWhere('jabatan', 'like', '%' . $this->search . '%')
-                        ->orWhere('departemen', 'like', '%' . $this->search . '%');
+                        ->orWhere('id_card', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('jabatan', function($q) {
+                            $q->where('nama_jabatan', 'like', '%' . $this->search . '%');
+                        })
+                        ->orWhereHas('departemen', function($q) {
+                            $q->where('nama_departemen', 'like', '%' . $this->search . '%');
+                        });
                 });
             })
             ->when($this->filterStatus, function ($query) {
                 $query->where('status', $this->filterStatus);
             })
             ->when($this->filterDepartemen, function ($query) {
-                $query->where('departemen', $this->filterDepartemen);
+                $query->where('departemen_id', $this->filterDepartemen);
+            })
+            ->when($this->filterJabatan, function ($query) {
+                $query->where('jabatan_id', $this->filterJabatan);
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
 
+        // Get departemen dan jabatan untuk filter dropdown
+        $departemens = \App\Models\Departemen::where('status', 'active')
+            ->orderBy('nama_departemen')
+            ->get();
+            
+        $jabatans = \App\Models\Jabatan::with('departemen')
+            ->where('status', 'active')
+            ->orderBy('nama_jabatan')
+            ->get();
+
         return view('livewire.admin.karyawan.index', [
-            'karyawans' => $karyawans
+            'karyawans' => $karyawans,
+            'departemens' => $departemens,
+            'jabatans' => $jabatans
         ]);
     }
 }

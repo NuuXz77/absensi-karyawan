@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('karyawan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('jabatan_id')->nullable()->constrained('jabatan')->nullOnDelete();
+            $table->foreignId('departemen_id')->nullable()->constrained('departemen')->nullOnDelete();
             $table->string('id_card')->unique();
             $table->string('nip')->unique()->nullable();
             $table->string('nama_lengkap');
@@ -21,8 +23,6 @@ return new class extends Migration {
             $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
             $table->string('no_telepon')->nullable();
             $table->string('foto_karyawan')->nullable();
-            $table->string('jabatan')->nullable();
-            $table->string('departemen')->nullable();
             $table->string('alamat')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();

@@ -69,11 +69,6 @@ class Index extends Component
         $this->dispatch('open-create-modal');
     }
 
-    public function view($id)
-    {
-        $this->dispatch('open-view-modal', id: $id);
-    }
-
     public function edit($id)
     {
         $this->dispatch('open-edit-modal', id: $id);
@@ -84,7 +79,11 @@ class Index extends Component
         $this->dispatch('confirm-delete', id: $id);
     }
 
-    protected $listeners = ['departemen-created' => '$refresh'];
+    protected $listeners = [
+        'departemen-created' => '$refresh',
+        'departemen-updated' => '$refresh',
+        'departemen-deleted' => '$refresh',
+    ];
 
     public function render()
     {
@@ -93,9 +92,8 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('nama_departemen', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_departemen', 'like', '%' . $this->search . '%')
-                        ->orWhere('deskripsi', 'like', '%' . $this->search . '%');
-                });
+                        ->orWhere('kode_departemen', 'like', '%' . $this->search . '%');
+                    });
             })
             ->when($this->filterStatus, function ($query) {
                 $query->where('status', $this->filterStatus);

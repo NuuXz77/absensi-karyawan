@@ -14,6 +14,11 @@ Route::middleware('auth', 'role:admin')->group(function () {
     // Absensi Routes
     Route::get('/admin/karyawan', \App\Livewire\Admin\Karyawan\Index::class)->name('admin.karyawan.index');
     Route::get('/admin/karyawan/create', \App\Livewire\Admin\Karyawan\Create::class)->name('admin.karyawan.create');
+    Route::get('/admin/karyawan/{id}/detail', \App\Livewire\Admin\Karyawan\Detail::class)->name('admin.karyawan.detail');
+    Route::get('/admin/karyawan/{id}/edit', \App\Livewire\Admin\Karyawan\Edit::class)->name('admin.karyawan.edit');
+
+    // Wajah Karyawan Routes
+    Route::get('/admin/wajah-karyawan', \App\Livewire\Admin\Wajah\Index::class)->name('admin.wajah-karyawan.index');
 
     // Lokasi Routes
     Route::get('/admin/lokasi', \App\Livewire\Admin\Lokasi\Index::class)->name('admin.lokasi.index');
@@ -23,6 +28,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Jadwal Routes
     Route::get('/admin/jadwal', \App\Livewire\Admin\Jadwal\Index::class)->name('admin.jadwal.index');
+    Route::get('/admin/jadwal/detail', \App\Livewire\Admin\Jadwal\Detail::class)->name('admin.jadwal.detail');
 
     // Absensi Routes
     Route::get('/admin/absensi', \App\Livewire\Admin\Absensi\Index::class)->name('admin.absensi.index');

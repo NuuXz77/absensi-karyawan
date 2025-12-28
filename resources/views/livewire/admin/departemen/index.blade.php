@@ -28,12 +28,16 @@
                 <livewire:admin.departemen.modals.create />
             </div>
 
+            <!-- Modals -->
+            <livewire:admin.departemen.modals.edit />
+            <livewire:admin.departemen.modals.delete />
+
             <!-- Table Section -->
             @php
                 $columns = [
                     ['label' => 'No', 'class' => 'w-16'],
-                    ['label' => 'Nama Departemen', 'field' => 'nama_departemen', 'sortable' => true],
                     ['label' => 'Kode', 'field' => 'kode_departemen', 'sortable' => true],
+                    ['label' => 'Nama Departemen', 'field' => 'nama_departemen', 'sortable' => true],
                     ['label' => 'Jumlah Karyawan'],
                     ['label' => 'Status'],
                     ['label' => 'Aksi', 'class' => 'text-center'],
@@ -47,11 +51,11 @@
                         class="hover:bg-base-200 transition-colors duration-150" style="overflow: visible !important;">
                         <td>{{ $departemens->firstItem() + $index }}</td>
                         <td>
-                            <div class="font-bold">{{ $departemen->nama_departemen }}</div>
-                            {{-- <div class="text-sm opacity-50">{{ $departemen->deskripsi ?? '-' }}</div> --}}
+                            <span class="badge badge-soft badge-primary">{{ $departemen->kode_departemen }}</span>
                         </td>
                         <td>
-                            <span class="badge badge-ghost font-mono">{{ $departemen->kode_departemen }}</span>
+                            <div class="font-bold">{{ $departemen->nama_departemen }}</div>
+                            {{-- <div class="text-sm opacity-50">{{ $departemen->deskripsi ?? '-' }}</div> --}}
                         </td>
                         <td>
                             <div class="flex items-center gap-2">
@@ -61,9 +65,9 @@
                         </td>
                         <td>
                             <span
-                                class="badge badge-sm
-                                {{ $departemen->status === 'aktif' ? 'badge-success' : '' }}
-                                {{ $departemen->status === 'nonaktif' ? 'badge-error' : '' }}
+                                class="badge badge-soft badge-sm
+                                {{ $departemen->status === 'active' ? 'badge-success' : '' }}
+                                {{ $departemen->status === 'inactive' ? 'badge-error' : '' }}
                             ">
                                 {{ ucfirst($departemen->status) }}
                             </span>

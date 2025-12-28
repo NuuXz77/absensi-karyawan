@@ -1,4 +1,21 @@
 <div>
+    <!-- Toast Notifications -->
+    <div class="toast toast-end z-[9999]">
+        @if(session('success'))
+            <div class="alert alert-success flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
+                <x-heroicon-o-check class="w-5" />
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="alert alert-error flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
+                <x-heroicon-o-x-circle class="w-5"/>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+    </div>
+
     <!-- Main Card -->
     <div class="card bg-base-300 border border-base-100" style="overflow: visible !important;">
         <div class="card-body" style="overflow: visible !important;">
@@ -20,9 +37,9 @@
                         <label tabindex="0" class="btn btn-ghost btn-sm gap-2">
                             <x-heroicon-o-funnel class="w-5 h-5" />
                             Filter
-                            @if ($filterStatus || $filterDepartemen)
+                            @if ($filterStatus || $filterDepartemen || $filterJabatan)
                                 <span
-                                    class="badge badge-primary badge-sm">{{ ($filterStatus ? 1 : 0) + ($filterDepartemen ? 1 : 0) }}</span>
+                                    class="badge badge-primary badge-sm">{{ ($filterStatus ? 1 : 0) + ($filterDepartemen ? 1 : 0) + ($filterJabatan ? 1 : 0) }}</span>
                             @endif
                         </label>
                         <div tabindex="0"
@@ -34,9 +51,8 @@
                                     </label>
                                     <select wire:model.live="filterStatus" class="select select-bordered select-sm">
                                         <option value="">Semua Status</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="nonaktif">Non-Aktif</option>
-                                        <option value="cuti">Cuti</option>
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Non-Aktif</option>
                                     </select>
                                 </div>
                                 <div class="form-control">
@@ -45,11 +61,20 @@
                                     </label>
                                     <select wire:model.live="filterDepartemen" class="select select-bordered select-sm">
                                         <option value="">Semua Departemen</option>
-                                        <option value="IT">IT</option>
-                                        <option value="HR">HR</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Marketing">Marketing</option>
-                                        <option value="Operations">Operations</option>
+                                        @foreach($departemens as $dept)
+                                            <option value="{{ $dept->id }}">{{ $dept->nama_departemen }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-semibold">Jabatan</span>
+                                    </label>
+                                    <select wire:model.live="filterJabatan" class="select select-bordered select-sm">
+                                        <option value="">Semua Jabatan</option>
+                                        @foreach($jabatans as $jab)
+                                            <option value="{{ $jab->id }}">{{ $jab->nama_jabatan }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <button wire:click="resetFilters" class="btn btn-ghost btn-sm w-full">
@@ -71,10 +96,9 @@
             @php
                 $columns = [
                     ['label' => 'No', 'class' => 'w-16'],
-                    ['label' => 'NIP', 'field' => 'nip', 'sortable' => true],
+                    ['label' => 'ID Card / NIP', 'field' => 'id_card', 'sortable' => true],
                     ['label' => 'Nama Lengkap', 'field' => 'nama_lengkap', 'sortable' => true],
-                    ['label' => 'Jabatan', 'field' => 'jabatan', 'sortable' => true],
-                    ['label' => 'Departemen', 'field' => 'departemen', 'sortable' => true],
+                    ['label' => 'Jabatan', 'class' => 'text-center'],
                     ['label' => 'Status'],
                     ['label' => 'Aksi', 'class' => 'text-center'],
                 ];
@@ -86,7 +110,12 @@
                     <tr wire:key="karyawan-{{ $karyawan->id }}" class="hover:bg-base-200 transition-colors duration-150"
                         style="overflow: visible !important;">
                         <td>{{ $karyawans->firstItem() + $index }}</td>
-                        <td class="font-mono">{{ $karyawan->nip }}</td>
+                        <td>
+                            <div class="font-mono text-sm">
+                                <div class="font-semibold">{{ $karyawan->id_card }}</div>
+                                <div class="text-xs opacity-60">{{ $karyawan->nip }}</div>
+                            </div>
+                        </td>
                         <td>
                             <div class="flex items-center gap-3">
                                 <div class="avatar">
@@ -110,9 +139,15 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{ $karyawan->jabatan }}</td>
-                        <td>
-                            <span class="badge badge-ghost">{{ $karyawan->departemen }}</span>
+                        <td class="text-center">
+                            @if($karyawan->jabatan)
+                                <div class="font-semibold">{{ $karyawan->jabatan->nama_jabatan }}</div>
+                                @if($karyawan->departemen)
+                                    <span class="badge badge-ghost badge-sm mt-1">{{ $karyawan->departemen->nama_departemen }}</span>
+                                @endif
+                            @else
+                                <span class="text-xs opacity-50">-</span>
+                            @endif
                         </td>
                         <td>
                             <span
@@ -124,7 +159,31 @@
                             </span>
                         </td>
                         <td>
-                            <x-partials.dropdown-actions :id="$karyawan->id" />
+                            <div class="dropdown dropdown-end">
+                                <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
+                                    <x-heroicon-o-ellipsis-vertical class="w-5 h-5" />
+                                </label>
+                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-300 rounded-box w-52 border border-base-100 z-10">
+                                    <li>
+                                        <a href="{{ route('admin.karyawan.detail', $karyawan->id) }}" wire:navigate class="flex items-center gap-2">
+                                            <x-heroicon-o-eye class="w-4 h-4" />
+                                            <span>Lihat Detail</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.karyawan.edit', $karyawan->id) }}" wire:navigate class="flex items-center gap-2">
+                                            <x-heroicon-o-pencil class="w-4 h-4" />
+                                            <span>Edit</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <button wire:click="$dispatch('open-delete-modal', { karyawanId: {{ $karyawan->id }} })" class="flex items-center gap-2 text-error hover:bg-error hover:text-error-content">
+                                            <x-heroicon-o-trash class="w-4 h-4" />
+                                            <span>Hapus</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -146,4 +205,7 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete Modal -->
+    <livewire:admin.karyawan.modals.delete />
 </div>

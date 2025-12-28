@@ -1,7 +1,7 @@
 <div>
     <!-- Main Card -->
-    <div class="card bg-base-300 border border-base-100">
-        <div class="card-body">
+    <div class="card bg-base-300 border border-base-100" style="overflow: visible !important;">
+        <div class="card-body" style="overflow: visible !important;">
             <!-- Top Section -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -34,11 +34,13 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-sm gap-2">
-                    <x-heroicon-o-plus class="w-5 h-5" />
-                    Tambah Shift
-                </button>
+                <!-- Right: Create Button -->
+                <livewire:admin.shift.modals.create />
             </div>
+
+            <!-- Modals -->
+            <livewire:admin.shift.modals.edit />
+            <livewire:admin.shift.modals.delete />
 
             <!-- Table -->
             @php
@@ -48,6 +50,7 @@
                     ['label' => 'Jam Masuk', 'field' => 'jam_masuk', 'sortable' => true],
                     ['label' => 'Jam Pulang', 'field' => 'jam_pulang', 'sortable' => true],
                     ['label' => 'Toleransi', 'field' => 'toleransi_menit', 'sortable' => true],
+                    ['label' => 'Jadwal Kerja'],
                     ['label' => 'Status'],
                     ['label' => 'Aksi', 'class' => 'text-center'],
                 ];
@@ -56,7 +59,7 @@
             <x-partials.table :columns="$columns" :data="$shifts" :sortField="$sortField" :sortDirection="$sortDirection"
                 emptyMessage="Tidak ada data shift" emptyIcon="heroicon-o-clock">
                 @foreach ($shifts as $index => $shift)
-                    <tr wire:key="shift-{{ $shift->id }}" class="hover:bg-base-200 transition-colors duration-150">
+                    <tr wire:key="shift-{{ $shift->id }}" class="hover:bg-base-200 transition-colors duration-150" style="overflow: visible !important;">
                         <td>{{ $shifts->firstItem() + $index }}</td>
                         <td>
                             <div class="flex items-center gap-2">
@@ -73,10 +76,16 @@
                             <span class="badge badge-outline badge-error">{{ \Carbon\Carbon::parse($shift->jam_pulang)->format('H:i') }}</span>
                         </td>
                         <td>
-                            <span class="badge badge-warning badge-sm">{{ $shift->toleransi_menit }} menit</span>
+                            <span class="badge badge-warning badge-soft badge-sm">{{ $shift->toleransi_menit }} menit</span>
                         </td>
                         <td>
-                            <span class="badge badge-sm {{ $shift->status === 'active' ? 'badge-success' : 'badge-error' }}">
+                            <div class="flex items-center gap-2">
+                                <x-heroicon-o-calendar class="w-4 h-4 opacity-50" />
+                                <span class="font-semibold">{{ $shift->jadwal_kerja_count ?? 0 }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge badge-sm badge-soft {{ $shift->status === 'active' ? 'badge-success' : 'badge-error' }}">
                                 {{ ucfirst($shift->status) }}
                             </span>
                         </td>
@@ -89,7 +98,17 @@
 
             <!-- Footer -->
             <div class="mt-6 pt-4 border-t border-base-300">
-                <x-partials.pagination :paginator="$shifts" :perPage="$perPage" />
+                <div class="flex flex-col gap-4">
+                    <!-- Data Info -->
+                    <div class="text-sm text-gray-600 text-center sm:text-left">
+                        Menampilkan <span class="font-semibold">{{ $shifts->firstItem() ?? 0 }}</span>
+                        sampai <span class="font-semibold">{{ $shifts->lastItem() ?? 0 }}</span>
+                        dari <span class="font-semibold">{{ $shifts->total() }}</span> data
+                    </div>
+
+                    <!-- Pagination Component -->
+                    <x-partials.pagination :paginator="$shifts" :perPage="$perPage" />
+                </div>
             </div>
         </div>
     </div>

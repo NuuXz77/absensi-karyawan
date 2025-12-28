@@ -8,7 +8,11 @@ class JadwalKerja extends Model
 {
     protected $table = 'jadwal_kerja';
 
-    protected $fillable = ['karyawan_id', 'shift_id', 'tanggal'];
+    protected $fillable = ['karyawan_id', 'shift_id', 'tanggal', 'status', 'keterangan'];
+
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
 
     public function karyawan()
     {
@@ -18,5 +22,24 @@ class JadwalKerja extends Model
     public function shift()
     {
         return $this->belongsTo(Shift::class);
+    }
+
+    // Check if karyawan has cuti/izin on this date
+    public function getCutiAttribute()
+    {
+        return Cuti::where('karyawan_id', $this->karyawan_id)
+            ->where('status', 'disetujui')
+            ->whereDate('tanggal_mulai', '<=', $this->tanggal)
+            ->whereDate('tanggal_selesai', '>=', $this->tanggal)
+            ->first();
+    }
+
+    public function getIzinAttribute()
+    {
+        return Izin::where('karyawan_id', $this->karyawan_id)
+            ->where('status', 'disetujui')
+            ->whereDate('tanggal_mulai', '<=', $this->tanggal)
+            ->whereDate('tanggal_selesai', '>=', $this->tanggal)
+            ->first();
     }
 }

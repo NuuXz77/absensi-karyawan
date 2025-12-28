@@ -1,14 +1,14 @@
 <div>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
         <!-- Total Karyawan -->
-        <div class="card bg-gradient-to-br from-primary to-primary-focus text-primary-content">
+        <div class="card bg-base-300 border border-base-100">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm opacity-80">Total Karyawan</p>
                         <h2 class="text-3xl font-bold">{{ $totalKaryawan }}</h2>
                     </div>
-                    <div class="bg-white/20 p-3 rounded-lg">
+                    <div class="bg-primary/20 text-primary p-3 rounded-lg">
                         <x-heroicon-o-users class="w-8 h-8" />
                     </div>
                 </div>
@@ -16,14 +16,14 @@
         </div>
 
         <!-- Karyawan Aktif -->
-        <div class="card bg-gradient-to-br from-success to-success-focus text-success-content">
+        <div class="card bg-base-300 border border-base-100">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm opacity-80">Karyawan Aktif</p>
                         <h2 class="text-3xl font-bold">{{ $karyawanAktif }}</h2>
                     </div>
-                    <div class="bg-white/20 p-3 rounded-lg">
+                    <div class="bg-success/20 text-success p-3 rounded-lg">
                         <x-heroicon-o-user-circle class="w-8 h-8" />
                     </div>
                 </div>
@@ -31,14 +31,14 @@
         </div>
 
         <!-- Hadir Hari Ini -->
-        <div class="card bg-gradient-to-br from-info to-info-focus text-info-content">
+        <div class="card bg-base-300 border border-base-100">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm opacity-80">Hadir Hari Ini</p>
                         <h2 class="text-3xl font-bold">{{ $hadirHariIni }}</h2>
                     </div>
-                    <div class="bg-white/20 p-3 rounded-lg">
+                    <div class="bg-info/20 text-info p-3 rounded-lg">
                         <x-heroicon-o-check-circle class="w-8 h-8" />
                     </div>
                 </div>
@@ -46,14 +46,14 @@
         </div>
 
         <!-- Izin & Cuti -->
-        <div class="card bg-gradient-to-br from-warning to-warning-focus text-warning-content">
+        <div class="card bg-base-300 border border-base-100">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm opacity-80">Izin & Cuti Hari Ini</p>
                         <h2 class="text-3xl font-bold">{{ $izinHariIni + $cutiAktif }}</h2>
                     </div>
-                    <div class="bg-white/20 p-3 rounded-lg">
+                    <div class="bg-warning/20 text-warning p-3 rounded-lg">
                         <x-heroicon-o-calendar class="w-8 h-8" />
                     </div>
                 </div>

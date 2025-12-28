@@ -66,6 +66,14 @@
                     </li>
 
                     <li>
+                        <a wire:navigate href="{{ route('admin.wajah-karyawan.index') }}"
+                            class="{{ request()->routeIs('admin.wajah-karyawan.*') ? 'bg-base-100' : '' }}">
+                            <x-heroicon-o-face-smile class="w-5" />
+                            Wajah Karyawan
+                        </a>
+                    </li>
+
+                    <li>
                         <a wire:navigate href="{{ route('admin.lokasi.index') }}"
                             class="{{ request()->routeIs('admin.lokasi.*') ? 'bg-base-100' : '' }}">
                             <x-heroicon-o-map class="w-5" />

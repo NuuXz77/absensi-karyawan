@@ -7,18 +7,15 @@
                 <!-- Left: Search & Filter -->
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <!-- Search Input -->
-                    <div class="form-control">
-                        <label class="input input-sm">
-                            <x-bi-search class="w-3" />
-                            <input type="text" wire:model.live.debounce.300ms="search"
-                                placeholder="Cari jabatan..." />
-                        </label>
-                    </div>
+                    <label class="input input-sm">
+                        <x-bi-search class="w-3" />
+                        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari jabatan..." />
+                    </label>
 
                     <!-- Filter Departemen -->
                     <select wire:model.live="filterDepartemen" class="select select-bordered select-sm">
                         <option value="">Semua Departemen</option>
-                        @foreach($departemens as $departemen)
+                        @foreach ($departemens as $departemen)
                             <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
                         @endforeach
                     </select>
@@ -26,8 +23,8 @@
                     <!-- Filter Status -->
                     <select wire:model.live="filterStatus" class="select select-bordered select-sm">
                         <option value="">Semua Status</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Non-Aktif</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Non-Aktif</option>
                     </select>
 
                     <button wire:click="resetFilters" class="btn btn-sm btn-ghost">
@@ -36,19 +33,20 @@
                 </div>
 
                 <!-- Right: Create Button -->
-                <button wire:click="create" class="btn btn-primary btn-sm gap-2">
-                    <x-heroicon-o-plus class="w-5 h-5" />
-                    <span class="hidden sm:inline">Tambah Jabatan</span>
-                </button>
+                <livewire:admin.jabatan.modals.create />
             </div>
+
+            <!-- Modals -->
+            <livewire:admin.jabatan.modals.edit />
+            <livewire:admin.jabatan.modals.delete />
 
             <!-- Table Section -->
             @php
                 $columns = [
                     ['label' => 'No', 'class' => 'w-16'],
-                    ['label' => 'Departemen', 'field' => 'departemen_id', 'sortable' => true],
+                    ['label' => 'Kode', 'field' => 'kode_jabatan', 'sortable' => true],
                     ['label' => 'Nama Jabatan', 'field' => 'nama_jabatan', 'sortable' => true],
-                    // ['label' => 'Level'],
+                    ['label' => 'Departemen', 'field' => 'departemen_id', 'sortable' => true],
                     ['label' => 'Jumlah Karyawan'],
                     ['label' => 'Status'],
                     ['label' => 'Aksi', 'class' => 'text-center'],
@@ -62,22 +60,15 @@
                         style="overflow: visible !important;">
                         <td>{{ $jabatans->firstItem() + $index }}</td>
                         <td>
+                            <span class="badge badge-ghost font-mono">{{ $jabatan->kode_jabatan }}</span>
+                        </td>
+                        <td>
                             <div class="font-bold">{{ $jabatan->nama_jabatan }}</div>
                             {{-- <div class="text-sm opacity-50">{{ $jabatan->deskripsi ?? '-' }}</div> --}}
                         </td>
                         <td>
                             <span class="badge badge-ghost">
                                 {{ $jabatan->departemen->nama_departemen ?? 'Semua Departemen' }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge badge-sm 
-                                {{ $jabatan->level === 'direktur' ? 'badge-error' : '' }}
-                                {{ $jabatan->level === 'manager' ? 'badge-warning' : '' }}
-                                {{ $jabatan->level === 'supervisor' ? 'badge-info' : '' }}
-                                {{ $jabatan->level === 'staff' ? 'badge-success' : '' }}
-                            ">
-                                {{ ucfirst($jabatan->level ?? 'Staff') }}
                             </span>
                         </td>
                         <td>
@@ -88,9 +79,9 @@
                         </td>
                         <td>
                             <span
-                                class="badge badge-sm
-                                {{ $jabatan->status === 'aktif' ? 'badge-success' : '' }}
-                                {{ $jabatan->status === 'nonaktif' ? 'badge-error' : '' }}
+                                class="badge badge-soft badge-sm
+                                {{ $jabatan->status === 'active' ? 'badge-success' : '' }}
+                                {{ $jabatan->status === 'inactive' ? 'badge-error' : '' }}
                             ">
                                 {{ ucfirst($jabatan->status) }}
                             </span>

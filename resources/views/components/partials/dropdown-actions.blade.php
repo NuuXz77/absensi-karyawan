@@ -1,6 +1,6 @@
 @props([
     'id',
-    'showView' => true,
+    'showView' => false,
     'showEdit' => true,
     'showDelete' => true,
     'viewMethod' => 'view',

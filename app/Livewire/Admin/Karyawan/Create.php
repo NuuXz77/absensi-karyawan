@@ -7,6 +7,8 @@ use Livewire\WithFileUploads;
 use App\Models\Karyawan;
 use App\Models\User;
 use App\Models\WajahKaryawan;
+use App\Models\Departemen;
+use App\Models\Jabatan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,7 +36,6 @@ class Create extends Component
     public $username = '';
     public $generatedPassword = '';
     public $jabatan = '';
-    public $departemen = '';
     public $status = 'active';
 
     // Face Recognition
@@ -52,7 +53,6 @@ class Create extends Component
         'foto_karyawan' => 'nullable|image|max:2048',
         'username' => 'required|unique:users,username',
         'jabatan' => 'required',
-        'departemen' => 'required',
         'status' => 'required|in:active,inactive',
     ];
 
@@ -73,7 +73,6 @@ class Create extends Component
         'username.required' => 'Username wajib diisi',
         'username.unique' => 'Username sudah terdaftar',
         'jabatan.required' => 'Jabatan wajib diisi',
-        'departemen.required' => 'Departemen wajib dipilih',
         'status.required' => 'Status wajib dipilih',
     ];
 
@@ -87,39 +86,28 @@ class Create extends Component
         $this->generateIdCard();
     }
 
-    public function updatedDepartemen()
-    {
-        $this->generateIdCard();
-    }
-
     public function generateIdCard()
     {
-        if (empty($this->jabatan) || empty($this->departemen)) {
+        if (empty($this->jabatan)) {
             $this->id_card = '';
             $this->username = '';
             return;
         }
 
-        // Mapping inisial jabatan
-        $jabatanInisial = [
-            'Staff' => 'ST',
-            'Supervisor' => 'SV',
-            'Manager' => 'MG',
-            'Director' => 'DR',
-            'Junior' => 'JR',
-            'Senior' => 'SR',
-        ];
+        // Ambil data jabatan dari database untuk mendapatkan kode
+        $jabatanData = Jabatan::find($this->jabatan);
+        if (!$jabatanData) {
+            return;
+        }
 
-        // Ambil inisial jabatan (default 2 huruf pertama jika tidak ada di mapping)
-        $inisial = $jabatanInisial[$this->jabatan] ?? strtoupper(substr($this->jabatan, 0, 2));
+        // Gunakan kode jabatan dari database
+        $inisial = $jabatanData->kode_jabatan;
         
         // Tahun sekarang
         $year = date('Y');
 
-        // Hitung jumlah karyawan dengan jabatan dan departemen yang sama
-        $count = Karyawan::where('jabatan', $this->jabatan)
-            ->where('departemen', $this->departemen)
-            ->count();
+        // Hitung jumlah karyawan dengan jabatan yang sama
+        $count = Karyawan::where('jabatan_id', $this->jabatan)->count();
 
         // Nomor urut (count + 1) dengan format 3 digit
         $number = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
@@ -177,7 +165,11 @@ class Create extends Component
                 $fotoPath = $this->foto_karyawan->store('karyawan/foto', 'public');
             }
 
-            // 3. Create Karyawan
+            // 3. Ambil departemen dari jabatan
+            $jabatanData = Jabatan::find($this->jabatan);
+            $departemen_id = $jabatanData ? $jabatanData->departemen_id : null;
+
+            // 4. Create Karyawan
             $karyawan = Karyawan::create([
                 'user_id' => $user->id,
                 'nip' => $this->nip,
@@ -189,12 +181,12 @@ class Create extends Component
                 'no_telepon' => $this->no_telepon,
                 'alamat' => $this->alamat,
                 'foto_karyawan' => $fotoPath,
-                'jabatan' => $this->jabatan,
-                'departemen' => $this->departemen,
+                'jabatan_id' => $this->jabatan,
+                'departemen_id' => $departemen_id,
                 'status' => $this->status,
             ]);
 
-            // 4. Save Face Embedding if exists
+            // 5. Save Face Embedding if exists
             if ($this->faceEmbedding && $fotoPath) {
                 WajahKaryawan::create([
                     'karyawan_id' => $karyawan->id,
@@ -204,7 +196,7 @@ class Create extends Component
             }
 
             session()->flash('success', "Karyawan berhasil ditambahkan! Username: {$this->username}, Password: {$this->generatedPassword}");
-            return redirect()->route('admin.karyawan.index');
+            return $this->redirect(route('admin.karyawan.index'), navigate: true);
 
         } catch (\Exception $e) {
             session()->flash('error', 'Gagal menambahkan karyawan: ' . $e->getMessage());
@@ -214,6 +206,13 @@ class Create extends Component
     #[Title('Tambah Karyawan')]
     public function render()
     {
-        return view('livewire.admin.karyawan.create');
+        $jabatans = Jabatan::with('departemen')
+            ->where('status', 'active')
+            ->orderBy('nama_jabatan')
+            ->get();
+
+        return view('livewire.admin.karyawan.create', [
+            'jabatans' => $jabatans
+        ]);
     }
 }

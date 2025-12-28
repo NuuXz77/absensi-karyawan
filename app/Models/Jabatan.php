@@ -23,9 +23,9 @@ class Jabatan extends Model
         return $this->belongsTo(Departemen::class);
     }
 
-    // relasi ke table karyawan (string-based)
+    // relasi ke table karyawan
     public function karyawans()
     {
-        return $this->hasMany(Karyawan::class, 'jabatan', 'nama_jabatan');
+        return $this->hasMany(Karyawan::class, 'jabatan_id');
     }
 }

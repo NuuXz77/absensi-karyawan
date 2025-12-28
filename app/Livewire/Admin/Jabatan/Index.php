@@ -77,11 +77,6 @@ class Index extends Component
         $this->dispatch('open-create-modal');
     }
 
-    public function view($id)
-    {
-        $this->dispatch('open-view-modal', id: $id);
-    }
-
     public function edit($id)
     {
         $this->dispatch('open-edit-modal', id: $id);
@@ -92,6 +87,12 @@ class Index extends Component
         $this->dispatch('confirm-delete', id: $id);
     }
 
+    protected $listeners = [
+        'jabatan-created' => '$refresh',
+        'jabatan-updated' => '$refresh',
+        'jabatan-deleted' => '$refresh',
+    ];
+
     public function render()
     {
         $jabatans = Jabatan::query()
@@ -100,8 +101,7 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('nama_jabatan', 'like', '%' . $this->search . '%')
-                        ->orWhere('deskripsi', 'like', '%' . $this->search . '%')
-                        ->orWhere('level', 'like', '%' . $this->search . '%');
+                      ->orWhere('kode_jabatan', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->filterStatus, function ($query) {
@@ -113,7 +113,7 @@ class Index extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
 
-        $departemens = Departemen::where('status', 'aktif')
+        $departemens = Departemen::where('status', 'active')
             ->orderBy('nama_departemen')
             ->get();
 

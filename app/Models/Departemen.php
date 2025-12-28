@@ -20,9 +20,9 @@ class Departemen extends Model
         return $this->hasMany(Jabatan::class);
     }
 
-    // relasi ke table karyawan (string-based)
+    // relasi ke table karyawan
     public function karyawans()
     {
-        return $this->hasMany(Karyawan::class, 'departemen', 'nama_departemen');
+        return $this->hasMany(Karyawan::class, 'departemen_id');
     }
 }

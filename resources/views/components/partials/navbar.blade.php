@@ -10,6 +10,17 @@
         </label>
     </div>
 
+    <div class="flex items-center gap-2 mr-4 badge badge-soft badge-primary">
+        <x-heroicon-o-clock class="w-5 h-5 text-primary" />
+        <span class="font-mono" x-data="{ time: '{{ now()->format('H:i:s') }}' }" x-init="setInterval(() => {
+            let date = new Date();
+            let hours = String(date.getHours()).padStart(2, '0');
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            let seconds = String(date.getSeconds()).padStart(2, '0');
+            time = `${hours}:${minutes}:${seconds}`;
+        }, 1000);" x-text="time"></span>
+    </div>
+
     <div class="flex-none gap-2">
         {{-- <!-- Notifications -->
         <div class="dropdown dropdown-end">

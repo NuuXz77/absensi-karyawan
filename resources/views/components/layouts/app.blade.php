@@ -68,7 +68,7 @@
                             </div>
                         @endif
 
-                        <!-- Flash Messages -->
+                        {{-- <!-- Flash Messages -->
                         @if (session('success'))
                             <div class="alert alert-success shadow-lg mb-6">
                                 <div>
@@ -94,7 +94,7 @@
                                     <span>{{ session('error') }}</span>
                                 </div>
                             </div>
-                        @endif
+                        @endif --}}
 
                         <!-- Page Content -->
                         {{ $slot }}

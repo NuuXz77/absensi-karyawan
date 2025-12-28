@@ -1,12 +1,12 @@
 <div>
-    <button class="btn btn-primary btn-sm gap-2" onclick="my_modal_3.showModal()">
+    <button class="btn btn-primary btn-sm gap-2" wire:click="openModal">
         <x-heroicon-o-plus class="w-5 h-5" />
         <span class="hidden sm:inline">Tambah Departemen</span>
     </button>
-    <dialog id="my_modal_3" class="modal">
+    <dialog id="modal_create_departemen" class="modal" wire:ignore.self>
         <div class="modal-box">
             <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
             </form>
             <h3 class="text-lg font-bold">Tambah Departemen</h3>
             
@@ -35,19 +35,21 @@
                     {{-- STATUS DEPARTEMEN --}}
                     <fieldset>
                         <legend class="fieldset-legend">STATUS DEPARTEMEN</legend>
-                        <label class="cursor-pointer label justify-start gap-3 validator">
-                            <input type="checkbox" wire:model="status" value="active" {{ $status === 'active' ? 'checked' : '' }} class="toggle toggle-success" required />
+                        <label class="cursor-pointer label justify-start gap-3">
+                            <input type="checkbox" 
+                                wire:change="$set('status', $event.target.checked ? 'active' : 'inactive')" 
+                                {{ $status === 'active' ? 'checked' : '' }} 
+                                class="toggle toggle-success" />
                             <span class="label-text flex items-center gap-2">
                                 <x-heroicon-o-check-circle class="w-5 h-5 text-success" />
                                 Status Aktif
                             </span>
                         </label>
-                        <p class="validator-hint hidden">Status wajib dipilih</p>
                     </fieldset>
 
                     <!-- Form Actions -->
                     <div class="flex justify-end gap-3 mt-6">
-                        <button type="button" onclick="my_modal_3.close()" wire:click="resetForm" class="btn btn-ghost btn-sm gap-2">
+                        <button type="button" wire:click="closeModal" class="btn btn-ghost btn-sm gap-2">
                             <x-heroicon-o-x-mark class="w-5 h-5" />
                             Batal
                         </button>
@@ -83,3 +85,15 @@
         @endif
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('open-create-modal', (event) => {
+            document.getElementById('modal_create_departemen').showModal();
+        });
+        
+        Livewire.on('close-create-modal', () => {
+            document.getElementById('modal_create_departemen').close();
+        });
+    });
+</script>

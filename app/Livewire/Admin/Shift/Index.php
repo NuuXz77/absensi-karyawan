@@ -13,13 +13,37 @@ class Index extends Component
 {
     use WithPagination;
 
+    #[Title('Data Shift')]
+
+    // Search & Filter
     public $search = '';
     public $filterStatus = '';
+
+    // Sorting
     public $sortField = 'nama_shift';
     public $sortDirection = 'asc';
+
+    // Per page
     public $perPage = 10;
 
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'filterStatus' => ['except' => ''],
+        'sortField' => ['except' => 'nama_shift'],
+        'sortDirection' => ['except' => 'asc'],
+    ];
+
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
     {
         $this->resetPage();
     }
@@ -36,14 +60,35 @@ class Index extends Component
 
     public function resetFilters()
     {
-        $this->search = '';
-        $this->filterStatus = '';
+        $this->reset(['search', 'filterStatus']);
+        $this->resetPage();
     }
 
-    #[Title('Data Shift')]
+    public function create()
+    {
+        $this->dispatch('open-create-modal');
+    }
+
+    public function edit($id)
+    {
+        $this->dispatch('open-edit-modal', id: $id);
+    }
+
+    public function confirmDelete($id)
+    {
+        $this->dispatch('confirm-delete', id: $id);
+    }
+
+    protected $listeners = [
+        'shift-created' => '$refresh',
+        'shift-updated' => '$refresh',
+        'shift-deleted' => '$refresh',
+    ];
+
     public function render()
     {
         $shifts = Shift::query()
+            ->withCount('jadwalKerja')
             ->when($this->search, function($query) {
                 $query->where('nama_shift', 'like', '%' . $this->search . '%');
             })

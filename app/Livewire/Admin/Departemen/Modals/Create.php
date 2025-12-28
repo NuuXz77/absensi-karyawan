@@ -18,7 +18,6 @@ class Create extends Component
     protected $rules = [
         'nama_departemen' => 'required|string|max:255|unique:departemen,nama_departemen',
         'kode_departemen' => 'required|string|max:50|unique:departemen,kode_departemen',
-        'status' => 'required|in:active,inactive',
     ];
 
     protected $messages = [
@@ -26,8 +25,15 @@ class Create extends Component
         'nama_departemen.unique' => 'Nama departemen sudah digunakan',
         'kode_departemen.required' => 'Kode departemen wajib diisi',
         'kode_departemen.unique' => 'Kode departemen sudah digunakan',
-        'status.required' => 'Status wajib dipilih',
     ];
+
+    public function openModal()
+    {
+        $this->resetValidation();
+        $this->showSuccess = false;
+        $this->showError = false;
+        $this->dispatch('open-create-modal');
+    }
 
     public function save()
     {
@@ -56,6 +62,9 @@ class Create extends Component
             // Refresh parent component
             $this->dispatch('departemen-created');
             
+            // Close modal
+            $this->dispatch('close-create-modal');
+            
         } catch (\Exception $e) {
             // Jika gagal
             $this->showError = true;
@@ -64,11 +73,12 @@ class Create extends Component
         }
     }
 
-    public function resetForm()
+    public function closeModal()
     {
         $this->reset(['nama_departemen', 'kode_departemen', 'showError', 'errorMessage']);
         $this->status = 'active';
         $this->resetValidation();
+        $this->dispatch('close-create-modal');
     }
 
     public function render()
