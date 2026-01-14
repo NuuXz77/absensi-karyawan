@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use App\Models\Absensi;
 use App\Models\Karyawan;
 use App\Models\Lokasi;
@@ -52,6 +53,13 @@ class Index extends Component
         $this->filterKaryawan = '';
         $this->filterLokasi = '';
         $this->filterTanggal = Carbon::today()->format('Y-m-d');
+    }
+
+    #[On('absensi-deleted')]
+    public function refreshData()
+    {
+        // Refresh data setelah hapus
+        $this->resetPage();
     }
 
     #[Title('Rekap Absensi')]

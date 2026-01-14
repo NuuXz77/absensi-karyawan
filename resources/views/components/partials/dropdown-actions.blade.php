@@ -13,7 +13,7 @@
     <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
         <x-heroicon-o-ellipsis-vertical class="w-5 h-5" />
     </label>
-    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-300 rounded-box w-52 border border-base-100">
+    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
         @if($showView)
             <li>
                 <button wire:click="{{ $viewMethod }}({{ $id }})" class="flex items-center gap-2">

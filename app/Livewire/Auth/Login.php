@@ -55,6 +55,9 @@ class Login extends Component
             // Ambil user yang sedang login
             $user = Auth::user();
 
+            // Update last login time
+            $user->update(['last_login_at' => now()]);
+
             // Tampilkan toast success
             $this->showSuccess = true;
             $this->showError = false;

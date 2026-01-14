@@ -17,7 +17,7 @@
     </div>
 
     <!-- Main Card -->
-    <div class="card bg-base-300 border border-base-100" style="overflow: visible !important;">
+    <div class="card bg-base-100 border border-base-300" style="overflow: visible !important;">
         <div class="card-body" style="overflow: visible !important;">
             <!-- Top Section: Filters & Actions -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
@@ -43,7 +43,7 @@
                             @endif
                         </label>
                         <div tabindex="0"
-                            class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-300 border border-base-100 mt-2">
+                            class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-100 border border-base-300 mt-2">
                             <div class="space-y-3">
                                 <div class="form-control">
                                     <label class="label">
@@ -163,7 +163,7 @@
                                 <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
                                     <x-heroicon-o-ellipsis-vertical class="w-5 h-5" />
                                 </label>
-                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-300 rounded-box w-52 border border-base-100 z-10">
+                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300 z-10">
                                     <li>
                                         <a href="{{ route('admin.karyawan.detail', $karyawan->id) }}" wire:navigate class="flex items-center gap-2">
                                             <x-heroicon-o-eye class="w-4 h-4" />

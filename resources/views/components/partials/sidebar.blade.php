@@ -1,9 +1,9 @@
 <aside class="drawer-side">
     <label for="sidebar-drawer" class="drawer-overlay"></label>
 
-    <div class="bg-base-300 text-base-content h-full w-64 md:w-72 border-r border-base-100 flex flex-col">
+    <div class="bg-base-100 text-base-content h-full w-64 md:w-72 border-r border-base-300 flex flex-col">
         <!-- Sidebar Header - Fixed at Top -->
-        <div class="flex items-center gap-3 border-b border-base-100 bg-base-300 sticky top-0 z-10 navbar">
+        <div class="flex items-center gap-3 border-b border-base-300 bg-base-100 sticky top-0 z-10 navbar">
             <div class="bg-primary text-primary-content p-2 rounded-xl">
                 <x-heroicon-o-presentation-chart-line class="w-5" />
             </div>
@@ -50,7 +50,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.dashboard.index') }}"
-                            class="{{ request()->routeIs('admin.dashboard.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.dashboard.*') ? 'bg-base-300' : '' }}">
                             {{-- <x-hugeicons-dashboard-circle class="w-5" /> --}}
                             <x-heroicon-o-home class="w-5" />
                             Dashboard
@@ -59,7 +59,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.karyawan.index') }}"
-                            class="{{ request()->routeIs('admin.karyawan.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.karyawan.*') ? 'bg-base-300' : '' }}">
                             <x-clarity-employee-group-line class="w-5" />
                             Data Karyawan
                         </a>
@@ -67,7 +67,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.wajah-karyawan.index') }}"
-                            class="{{ request()->routeIs('admin.wajah-karyawan.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.wajah-karyawan.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-face-smile class="w-5" />
                             Wajah Karyawan
                         </a>
@@ -75,7 +75,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.lokasi.index') }}"
-                            class="{{ request()->routeIs('admin.lokasi.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.lokasi.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-map class="w-5" />
                             Data Lokasi
                         </a>
@@ -83,7 +83,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.shift.index') }}"
-                            class="{{ request()->routeIs('admin.shift.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.shift.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-clock class="w-5" />
                             Data Shift
                         </a>
@@ -91,7 +91,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.jadwal.index') }}"
-                            class="{{ request()->routeIs('admin.jadwal.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.jadwal.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-calendar class="w-5" />
                             Jadwal Kerja
                         </a>
@@ -99,7 +99,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('admin.absensi.index') }}"
-                            class="{{ request()->routeIs('admin.absensi.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.absensi.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-chart-bar class="w-5" />
                             Rekap Absensi
                         </a>
@@ -114,13 +114,13 @@
                             <ul>
                                 <li>
                                     <a wire:navigate href="{{ route('admin.departemen.index') }}"
-                                        class="{{ request()->routeIs('admin.departemen.*') ? 'bg-base-100' : '' }}">
+                                        class="{{ request()->routeIs('admin.departemen.*') ? 'bg-base-300' : '' }}">
                                         Departemen
                                     </a>
                                 </li>
                                 <li>
                                     <a wire:navigate href="{{ route('admin.jabatan.index') }}"
-                                        class="{{ request()->routeIs('admin.jabatan.*') ? 'bg-base-100' : '' }}">
+                                        class="{{ request()->routeIs('admin.jabatan.*') ? 'bg-base-300' : '' }}">
                                         Jabatan
                                     </a>
                                 </li>
@@ -134,21 +134,21 @@
                                 {{-- <x-heroicon-o-document-text class="w-5" /> --}}
                                 <x-iconpark-permissions-o class="w-5" />
                                 Pengajuan
-                                <span class="badge badge-primary badge-sm">8</span>
+                                <span class="badge badge-warning badge-soft badge-xs">8</span>
                             </summary>
                             <ul>
                                 <li>
                                     <a wire:navigate href="{{ route('admin.izin.index') }}"
-                                        class="{{ request()->routeIs('admin.izin.*') ? 'bg-base-100' : '' }}">
+                                        class="{{ request()->routeIs('admin.izin.*') ? 'bg-base-300' : '' }}">
                                         Izin
-                                        <span class="badge badge-primary badge-sm">3</span>
+                                        <span class="badge badge-info badge-soft badge-xs">3</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a wire:navigate href="{{ route('admin.cuti.index') }}"
-                                        class="{{ request()->routeIs('admin.cuti.*') ? 'bg-base-100' : '' }}">
+                                        class="{{ request()->routeIs('admin.cuti.*') ? 'bg-base-300' : '' }}">
                                         Cuti
-                                        <span class="badge badge-primary badge-sm">5</span>
+                                        <span class="badge badge-secondary badge-soft badge-xs">5</span>
                                     </a>
                                 </li>
                             </ul>
@@ -161,7 +161,7 @@
 
                     <li>
                         <a wire:navigate href="/"
-                            class="{{ request()->routeIs('admin.pengaturan.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('admin.pengaturan.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-cog-6-tooth class="w-5" />
                             Pengaturan Sistem
                         </a>
@@ -181,7 +181,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('dashboard') }}"
-                            class="{{ request()->routeIs('dashboard') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('dashboard') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-home class="w-5" />
                             Dashboard
                         </a>
@@ -189,7 +189,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('karyawan.absen') }}"
-                            class="{{ request()->routeIs('karyawan.absen') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('karyawan.absen') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-finger-print class="w-5" />
                             Absen Hari Ini
                             @if (!Auth::user()->hasAbsenToday())
@@ -200,7 +200,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('karyawan.riwayat.index') }}"
-                            class="{{ request()->routeIs('karyawan.riwayat.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('karyawan.riwayat.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-clock class="w-5" />
                             Riwayat Absensi
                         </a>
@@ -208,7 +208,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('karyawan.izin.create') }}"
-                            class="{{ request()->routeIs('karyawan.izin.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('karyawan.izin.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-document-text class="w-5" />
                             Ajukan Izin
                         </a>
@@ -216,7 +216,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('karyawan.cuti.create') }}"
-                            class="{{ request()->routeIs('karyawan.cuti.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('karyawan.cuti.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-calendar-days class="w-5" />
                             Ajukan Cuti
                         </a>
@@ -228,7 +228,7 @@
 
                     <li>
                         <a wire:navigate href="{{ route('karyawan.profil.index') }}"
-                            class="{{ request()->routeIs('karyawan.profil.*') ? 'bg-base-100' : '' }}">
+                            class="{{ request()->routeIs('karyawan.profil.*') ? 'bg-base-300' : '' }}">
                             <x-heroicon-o-user-circle class="w-5" />
                             Profil Saya
                         </a>

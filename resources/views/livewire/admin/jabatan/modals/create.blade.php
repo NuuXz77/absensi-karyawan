@@ -4,7 +4,7 @@
         <span class="hidden sm:inline">Tambah Jabatan</span>
     </button>
     <dialog id="modal_create_jabatan" class="modal" wire:ignore.self>
-        <div class="modal-box max-w-2xl">
+        <div class="modal-box max-w-2xl border border-base-300">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
             </form>

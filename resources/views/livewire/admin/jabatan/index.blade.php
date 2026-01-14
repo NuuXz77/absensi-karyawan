@@ -1,6 +1,6 @@
 <div>
     <!-- Main Card -->
-    <div class="card bg-base-300 border border-base-100" style="overflow: visible !important;">
+    <div class="card bg-base-100 border border-base-300" style="overflow: visible !important;">
         <div class="card-body" style="overflow: visible !important;">
             <!-- Top Section: Filters & Actions -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">

@@ -32,7 +32,7 @@
                     <label class="input validator w-full input-primary">
                         <x-solar-lock-password-linear class="w-5 opacity-50" />
 
-                        <input type="password" required placeholder="Password" pattern="[A-Za-z][A-Za-z0-9\-]*"
+                        <input type="password" required placeholder="Password"
                             minlength="3" maxlength="30" title="Isi yang bener" wire:model="password" />
                     </label>
                     <p class="validator-hint hidden">

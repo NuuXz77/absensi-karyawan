@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Karyawan;
+use App\Models\Jabatan;
+use App\Models\Departemen;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +16,29 @@ class KaryawanSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get departments and positions
+        $itDept = Departemen::where('nama_departemen', 'IT')->first();
+        $hrDept = Departemen::where('nama_departemen', 'HR')->first();
+        $financeDept = Departemen::where('nama_departemen', 'Finance')->first();
+        $marketingDept = Departemen::where('nama_departemen', 'Marketing')->first();
+        $operationsDept = Departemen::where('nama_departemen', 'Operations')->first();
+
+        $seniorDev = Jabatan::where('nama_jabatan', 'Senior Developer')->first();
+        $juniorDev = Jabatan::where('nama_jabatan', 'Junior Developer')->first();
+        $systemAnalyst = Jabatan::where('nama_jabatan', 'System Analyst')->first();
+        $uiuxDesigner = Jabatan::where('nama_jabatan', 'UI/UX Designer')->first();
+        $hrManager = Jabatan::where('nama_jabatan', 'HR Manager')->first();
+        $hrStaff = Jabatan::where('nama_jabatan', 'HR Staff')->first();
+        $financeManager = Jabatan::where('nama_jabatan', 'Finance Manager')->first();
+        $accountingStaff = Jabatan::where('nama_jabatan', 'Accounting Staff')->first();
+        $payrollStaff = Jabatan::where('nama_jabatan', 'Payroll Staff')->first();
+        $marketingManager = Jabatan::where('nama_jabatan', 'Marketing Manager')->first();
+        $marketingExec = Jabatan::where('nama_jabatan', 'Marketing Executive')->first();
+        $salesExec = Jabatan::where('nama_jabatan', 'Sales Executive')->first();
+        $opsSupervisor = Jabatan::where('nama_jabatan', 'Operations Supervisor')->first();
+        $opsStaff = Jabatan::where('nama_jabatan', 'Operations Staff')->first();
+        $warehouseManager = Jabatan::where('nama_jabatan', 'Warehouse Manager')->first();
+
         // Get existing users with role karyawan
         $karyawan1 = User::where('username', 'karyawan1')->first();
         $karyawan2 = User::where('username', 'karyawan2')->first();
@@ -29,8 +54,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1990-05-15',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567001',
-                'jabatan' => 'Senior Developer',
-                'departemen' => 'IT',
+                'jabatan_id' => $seniorDev->id,
+                'departemen_id' => $itDept->id,
                 'alamat' => 'Jl. Merdeka No. 123, Jakarta',
                 'status' => 'active',
             ],
@@ -43,8 +68,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1992-08-20',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567002',
-                'jabatan' => 'HR Manager',
-                'departemen' => 'HR',
+                'jabatan_id' => $hrManager->id,
+                'departemen_id' => $hrDept->id,
                 'alamat' => 'Jl. Sudirman No. 45, Jakarta',
                 'status' => 'active',
             ],
@@ -57,8 +82,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1988-03-10',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567003',
-                'jabatan' => 'Finance Manager',
-                'departemen' => 'Finance',
+                'jabatan_id' => $financeManager->id,
+                'departemen_id' => $financeDept->id,
                 'alamat' => 'Jl. Gatot Subroto No. 78, Jakarta',
                 'status' => 'active',
             ],
@@ -75,8 +100,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1995-11-25',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567004',
-                'jabatan' => 'Marketing Executive',
-                'departemen' => 'Marketing',
+                'jabatan_id' => $marketingExec->id,
+                'departemen_id' => $marketingDept->id,
                 'alamat' => 'Jl. Thamrin No. 12, Jakarta',
                 'status' => 'active',
             ],
@@ -89,8 +114,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1991-07-18',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567005',
-                'jabatan' => 'Operations Supervisor',
-                'departemen' => 'Operations',
+                'jabatan_id' => $opsSupervisor->id,
+                'departemen_id' => $operationsDept->id,
                 'alamat' => 'Jl. Rasuna Said No. 89, Jakarta',
                 'status' => 'active',
             ],
@@ -103,8 +128,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1993-02-14',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567006',
-                'jabatan' => 'Junior Developer',
-                'departemen' => 'IT',
+                'jabatan_id' => $juniorDev->id,
+                'departemen_id' => $itDept->id,
                 'alamat' => 'Jl. Kuningan No. 34, Jakarta',
                 'status' => 'active',
             ],
@@ -117,8 +142,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1989-09-30',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567007',
-                'jabatan' => 'HR Staff',
-                'departemen' => 'HR',
+                'jabatan_id' => $hrStaff->id,
+                'departemen_id' => $hrDept->id,
                 'alamat' => 'Jl. Senayan No. 56, Jakarta',
                 'status' => 'active',
             ],
@@ -131,8 +156,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1994-12-05',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567008',
-                'jabatan' => 'Accounting Staff',
-                'departemen' => 'Finance',
+                'jabatan_id' => $accountingStaff->id,
+                'departemen_id' => $financeDept->id,
                 'alamat' => 'Jl. Menteng No. 67, Jakarta',
                 'status' => 'active',
             ],
@@ -145,8 +170,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1987-04-22',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567009',
-                'jabatan' => 'Marketing Manager',
-                'departemen' => 'Marketing',
+                'jabatan_id' => $marketingManager->id,
+                'departemen_id' => $marketingDept->id,
                 'alamat' => 'Jl. Kemang No. 23, Jakarta',
                 'status' => 'active',
             ],
@@ -159,8 +184,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1996-06-08',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567010',
-                'jabatan' => 'Operations Staff',
-                'departemen' => 'Operations',
+                'jabatan_id' => $opsStaff->id,
+                'departemen_id' => $operationsDept->id,
                 'alamat' => 'Jl. Cikini No. 90, Jakarta',
                 'status' => 'active',
             ],
@@ -173,8 +198,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1992-01-17',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567011',
-                'jabatan' => 'UI/UX Designer',
-                'departemen' => 'IT',
+                'jabatan_id' => $uiuxDesigner->id,
+                'departemen_id' => $itDept->id,
                 'alamat' => 'Jl. Blok M No. 45, Jakarta',
                 'status' => 'active',
             ],
@@ -187,8 +212,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1994-08-29',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567012',
-                'jabatan' => 'Sales Executive',
-                'departemen' => 'Marketing',
+                'jabatan_id' => $salesExec->id,
+                'departemen_id' => $marketingDept->id,
                 'alamat' => 'Jl. Pondok Indah No. 78, Jakarta',
                 'status' => 'active',
             ],
@@ -201,8 +226,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1990-10-12',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567013',
-                'jabatan' => 'System Analyst',
-                'departemen' => 'IT',
+                'jabatan_id' => $systemAnalyst->id,
+                'departemen_id' => $itDept->id,
                 'alamat' => 'Jl. Kelapa Gading No. 101, Jakarta',
                 'status' => 'active',
             ],
@@ -215,8 +240,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1993-05-21',
                 'jenis_kelamin' => 'P',
                 'no_telepon' => '081234567014',
-                'jabatan' => 'Payroll Staff',
-                'departemen' => 'Finance',
+                'jabatan_id' => $payrollStaff->id,
+                'departemen_id' => $financeDept->id,
                 'alamat' => 'Jl. Tebet No. 33, Jakarta',
                 'status' => 'active',
             ],
@@ -229,8 +254,8 @@ class KaryawanSeeder extends Seeder
                 'tanggal_lahir' => '1991-03-16',
                 'jenis_kelamin' => 'L',
                 'no_telepon' => '081234567015',
-                'jabatan' => 'Warehouse Manager',
-                'departemen' => 'Operations',
+                'jabatan_id' => $warehouseManager->id,
+                'departemen_id' => $operationsDept->id,
                 'alamat' => 'Jl. Pluit No. 56, Jakarta',
                 'status' => 'active',
             ],
@@ -248,8 +273,8 @@ class KaryawanSeeder extends Seeder
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'no_telepon' => $data['no_telepon'],
                 'foto_karyawan' => null,
-                'jabatan' => $data['jabatan'],
-                'departemen' => $data['departemen'],
+                'jabatan_id' => $data['jabatan_id'],
+                'departemen_id' => $data['departemen_id'],
                 'alamat' => $data['alamat'],
                 'status' => $data['status'],
             ]);
@@ -261,7 +286,7 @@ class KaryawanSeeder extends Seeder
                 'username' => $data['username'],
                 'password' => bcrypt('password123'),
                 'role' => 'karyawan',
-                'harus_mengganti_password' => true,
+                'harus_mengganti_password' => false,
                 'status' => 'active',
             ]);
 
@@ -275,8 +300,8 @@ class KaryawanSeeder extends Seeder
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'no_telepon' => $data['no_telepon'],
                 'foto_karyawan' => null,
-                'jabatan' => $data['jabatan'],
-                'departemen' => $data['departemen'],
+                'jabatan_id' => $data['jabatan_id'],
+                'departemen_id' => $data['departemen_id'],
                 'alamat' => $data['alamat'],
                 'status' => $data['status'],
             ]);

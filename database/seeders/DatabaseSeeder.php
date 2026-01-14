@@ -16,14 +16,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Master tables first
+            DepartemenSeeder::class,
+            JabatanSeeder::class,
+            ShiftSeeder::class,
+            LokasiSeeder::class,
+            
+            // User and Karyawan tables
             UserSeeder::class,
             KaryawanSeeder::class,
         ]);
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

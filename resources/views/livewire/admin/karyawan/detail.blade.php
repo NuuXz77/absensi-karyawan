@@ -1,7 +1,7 @@
 <div>
 
     <!-- Statistik -->
-    <div class="stats stats-vertical lg:stats-horizontal bg-base-300 border border-base-100 w-full mb-4">
+    <div class="stats stats-vertical lg:stats-horizontal bg-base-100 border border-base-300 w-full mb-4">
         <div class="stat">
             <div class="stat-figure text-primary">
                 <x-heroicon-o-calendar class="w-8 h-8" />
@@ -32,7 +32,7 @@
         <div class="col-span-12">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {{-- data pribadi --}}
-                <div class="card bg-base-300 border border-base-100">
+                <div class="card bg-base-100 border border-base-300">
                     <div class="card-body">
                         <h4 class="card-title text-base flex items-center gap-2 mb-4">
                             <x-heroicon-o-identification class="w-5 h-5 text-primary" />
@@ -118,7 +118,7 @@
                 </div>
 
                 {{-- foto karyawan --}}
-                <div class="card bg-base-300 border border-base-100">
+                <div class="card bg-base-100 border border-base-300">
                     <div class="card-body">
                         <h4 class="card-title text-base flex items-center gap-2 mb-4">
                             <x-heroicon-o-camera class="w-5 h-5 text-primary" />
@@ -206,7 +206,7 @@
                 </div>
 
                 {{-- Informasi Karyawan --}}
-                <div class="card bg-base-300 border border-base-100">
+                <div class="card bg-base-100 border border-base-300">
                     <div class="card-body">
                         <h4 class="card-title text-base flex items-center gap-2 mb-4">
                             <x-heroicon-o-briefcase class="w-5 h-5 text-primary" />
@@ -264,7 +264,7 @@
                 </div>
 
                 {{-- Informasi Akun untuk login --}}
-                <div class="card bg-base-300 border border-base-100">
+                <div class="card bg-base-100 border border-base-300">
                     <div class="card-body">
                         <h4 class="card-title text-base flex items-center gap-2 mb-4">
                             <x-heroicon-o-user-circle class="w-5 h-5 text-primary" />
@@ -346,6 +346,28 @@
                                     </div>
                                 </div>
                             </fieldset>
+
+                            {{-- Status Ganti Password --}}
+                            <fieldset class="lg:col-span-2">
+                                <legend class="fieldset-legend">Status Password</legend>
+                                @if($karyawan->user->harus_mengganti_password)
+                                    <div class="alert alert-soft alert-warning py-3">
+                                        <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
+                                        <div>
+                                            <p class="font-semibold">Akun Belum Ganti Password</p>
+                                            <p class="text-xs">Pengguna masih menggunakan password default dan harus menggantinya saat login pertama kali</p>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="alert alert-soft alert-success py-3">
+                                        <x-heroicon-o-check-circle class="w-5 h-5" />
+                                        <div>
+                                            <p class="font-semibold">Password Sudah Diganti</p>
+                                            <p class="text-xs">Pengguna telah mengubah password default</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -359,10 +381,32 @@
             <x-heroicon-o-arrow-left class="w-5 h-5" />
             Kembali
         </a>
+        <button wire:click="copyDetailToClipboard" class="btn btn-info gap-2 btn-sm">
+            <x-heroicon-o-clipboard-document class="w-5 h-5" />
+            Copy Data Karyawan
+        </button>
         <a wire:navigate href="{{ route('admin.karyawan.edit', $karyawan->id) }}"
             class="btn btn-primary gap-2 btn-sm">
             <x-heroicon-o-pencil class="w-5 h-5" />
             Edit
         </a>
     </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast toast-end z-[9999]" style="transition: all 0.3s ease;">
+        @if(session('success'))
+            <div class="alert alert-success flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
+                <x-heroicon-o-check class="w-5" />
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="alert alert-error flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
+                <x-heroicon-o-x-circle class="w-5"/>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+    </div>
+
 </div>

@@ -11,7 +11,10 @@ use App\Models\Shift;
 use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\Departemen;
+use App\Models\Lokasi;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 #[Layout('components.layouts.app')]
 class Index extends Component
@@ -20,9 +23,12 @@ class Index extends Component
     public $selectedMonth;
     public $selectedYear;
     public $filterKaryawan = '';
+    public $filterLokasi = '';
     public $filterShift = '';
     public $filterDepartemen = '';
     public $viewMode = 'calendar'; // calendar atau list
+
+    protected $queryString = ['filterLokasi', 'filterDepartemen', 'filterShift'];
 
     // Modal states
     public $showCreateModal = false;
@@ -59,6 +65,7 @@ class Index extends Component
     public function resetFilters()
     {
         $this->filterKaryawan = '';
+        $this->filterLokasi = '';
         $this->filterShift = '';
         $this->filterDepartemen = '';
     }
@@ -128,6 +135,41 @@ class Index extends Component
         'jadwals-generated' => '$refresh',
     ];
 
+    /**
+     * Get Indonesian national holidays from API
+     * Using https://api-harilibur.vercel.app/
+     */
+    public function getHariLiburNasional($year)
+    {
+        try {
+            // Cache hasil API selama 30 hari untuk mengurangi request
+            return Cache::remember("hari_libur_{$year}", now()->addDays(30), function () use ($year) {
+                $response = Http::timeout(10)->get("https://api-harilibur.vercel.app/api", [
+                    'year' => $year
+                ]);
+
+                if ($response->successful()) {
+                    $holidays = collect($response->json());
+                    
+                    // Format data: date => [name, is_cuti]
+                    return $holidays->mapWithKeys(function ($item) {
+                        return [
+                            $item['holiday_date'] => [
+                                'name' => $item['holiday_name'],
+                                'is_cuti' => $item['is_national_holiday'] ?? false
+                            ]
+                        ];
+                    })->toArray();
+                }
+
+                return [];
+            });
+        } catch (\Exception $e) {
+            \Log::error('Error fetching hari libur: ' . $e->getMessage());
+            return [];
+        }
+    }
+
     #[Title('Jadwal Kerja')]
     public function render()
     {
@@ -144,18 +186,19 @@ class Index extends Component
             ->orderBy('nama_departemen')
             ->get();
         
-        $startOfMonth = Carbon::create($this->selectedYear, $this->selectedMonth, 1)->startOfMonth();
+        $startOfMonth = Carbon::create($this->selectedYear, $this->selectedMonth, 1);
         $endOfMonth = Carbon::create($this->selectedYear, $this->selectedMonth, 1)->endOfMonth();
         $startOfCalendar = $startOfMonth->copy()->startOfWeek();
         $endOfCalendar = $endOfMonth->copy()->endOfWeek();
 
         // Load jadwals for current month with filters
-        // Departemen filter is MANDATORY
-        if (!$this->filterDepartemen) {
-            $jadwals = collect(); // Empty collection if no departemen selected
+        // Lokasi and Departemen filter are MANDATORY
+        if (!$this->filterLokasi || !$this->filterDepartemen) {
+            $jadwals = collect(); // Empty collection if no lokasi or departemen selected
         } else {
-            $query = JadwalKerja::with(['karyawan.departemen', 'shift'])
+            $query = JadwalKerja::with(['karyawan.departemen', 'shift', 'lokasi'])
                 ->whereBetween('tanggal', [$startOfMonth, $endOfMonth])
+                ->where('lokasi_id', $this->filterLokasi)
                 ->whereHas('karyawan', function($q) {
                     $q->where('departemen_id', $this->filterDepartemen);
                 });
@@ -192,10 +235,18 @@ class Index extends Component
             ->with('karyawan')
             ->get();
 
+        // Get hari libur nasional from API
+        $hariLiburNasional = $this->getHariLiburNasional($this->selectedYear);
+
+        $lokasis = Lokasi::where('status', 'active')
+            ->orderBy('nama_lokasi')
+            ->get();
+
         return view('livewire.admin.jadwal.index', [
             'karyawans' => $karyawans,
             'shifts' => $shifts,
             'departemens' => $departemens,
+            'lokasis' => $lokasis,
             'jadwals' => $jadwals,
             'startOfCalendar' => $startOfCalendar,
             'endOfCalendar' => $endOfCalendar,
@@ -203,6 +254,7 @@ class Index extends Component
             'endOfMonth' => $endOfMonth,
             'cutisInMonth' => $cutisInMonth,
             'izinsInMonth' => $izinsInMonth,
+            'hariLiburNasional' => $hariLiburNasional,
         ]);
     }
 }

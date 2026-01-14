@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Jadwal\Modals;
 use App\Models\JadwalKerja;
 use App\Models\Karyawan;
 use App\Models\Shift;
+use App\Models\Lokasi;
 use Livewire\Component;
 
 class Edit extends Component
@@ -12,6 +13,7 @@ class Edit extends Component
     public $jadwalId;
     public $karyawan_id = '';
     public $shift_id = '';
+    public $lokasi_id = '';
     public $tanggal = '';
     public $status = 'aktif';
     public $keterangan = '';
@@ -25,12 +27,14 @@ class Edit extends Component
     protected $rules = [
         'karyawan_id' => 'required|exists:karyawan,id',
         'shift_id' => 'required|exists:shift,id',
+        'lokasi_id' => 'required|exists:lokasi,id',
         'tanggal' => 'required|date',
     ];
 
     protected $messages = [
         'karyawan_id.required' => 'Karyawan wajib dipilih',
         'shift_id.required' => 'Shift wajib dipilih',
+        'lokasi_id.required' => 'Lokasi wajib dipilih',
         'tanggal.required' => 'Tanggal wajib diisi',
     ];
 
@@ -41,6 +45,7 @@ class Edit extends Component
         $this->jadwalId = $jadwal->id;
         $this->karyawan_id = $jadwal->karyawan_id;
         $this->shift_id = $jadwal->shift_id;
+        $this->lokasi_id = $jadwal->lokasi_id;
         $this->tanggal = $jadwal->tanggal;
         $this->status = $jadwal->status ?? 'aktif';
         $this->keterangan = $jadwal->keterangan;
@@ -77,6 +82,7 @@ class Edit extends Component
             $jadwal->update([
                 'karyawan_id' => $this->karyawan_id,
                 'shift_id' => $this->shift_id,
+                'lokasi_id' => $this->lokasi_id,
                 'tanggal' => $this->tanggal,
                 'status' => $this->status,
                 'keterangan' => $this->keterangan,
@@ -97,7 +103,7 @@ class Edit extends Component
 
     public function closeModal()
     {
-        $this->reset(['jadwalId', 'karyawan_id', 'shift_id', 'tanggal', 'keterangan', 'showError', 'errorMessage']);
+        $this->reset(['jadwalId', 'karyawan_id', 'shift_id', 'lokasi_id', 'tanggal', 'keterangan', 'showError', 'errorMessage']);
         $this->status = 'aktif';
         $this->resetValidation();
         $this->dispatch('close-edit-modal');
@@ -114,9 +120,14 @@ class Edit extends Component
             ->orderBy('nama_shift')
             ->get();
 
+        $lokasis = Lokasi::where('status', 'active')
+            ->orderBy('nama_lokasi')
+            ->get();
+
         return view('livewire.admin.jadwal.modals.edit', [
             'karyawans' => $karyawans,
             'shifts' => $shifts,
+            'lokasis' => $lokasis,
         ]);
     }
 }

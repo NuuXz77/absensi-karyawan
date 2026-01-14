@@ -6,6 +6,7 @@ use App\Models\JadwalKerja;
 use App\Models\Karyawan;
 use App\Models\Shift;
 use App\Models\Departemen;
+use App\Models\Lokasi;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -14,6 +15,7 @@ class AutoGenerate extends Component
     public $tanggal_mulai;
     public $tanggal_selesai;
     public $departemen_id = '';
+    public $lokasi_id = '';
     public $shift_pattern = 'single'; // single, rotating
     public $selected_shifts = [];
     public $include_weekends = false;
@@ -28,6 +30,7 @@ class AutoGenerate extends Component
         'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         'departemen_id' => 'required|exists:departemen,id',
+        'lokasi_id' => 'required|exists:lokasi,id',
         'shift_pattern' => 'required|in:single,rotating',
         'selected_shifts' => 'required|array|min:1',
     ];
@@ -37,6 +40,7 @@ class AutoGenerate extends Component
         'tanggal_selesai.required' => 'Tanggal selesai wajib diisi',
         'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus setelah tanggal mulai',
         'departemen_id.required' => 'Departemen wajib dipilih',
+        'lokasi_id.required' => 'Lokasi wajib dipilih',
         'shift_pattern.required' => 'Pola shift wajib dipilih',
         'selected_shifts.required' => 'Minimal pilih 1 shift',
         'selected_shifts.min' => 'Minimal pilih 1 shift',
@@ -124,6 +128,7 @@ class AutoGenerate extends Component
                     JadwalKerja::create([
                         'karyawan_id' => $karyawanId,
                         'shift_id' => $shiftId,
+                        'lokasi_id' => $this->lokasi_id,
                         'tanggal' => $currentDate->format('Y-m-d'),
                         'status' => 'aktif',
                     ]);
@@ -147,7 +152,7 @@ class AutoGenerate extends Component
             $this->dispatch('jadwals-generated');
             
             // Reset form
-            $this->reset(['departemen_id', 'selected_shifts', 'karyawan_ids']);
+            $this->reset(['departemen_id', 'lokasi_id', 'selected_shifts', 'karyawan_ids']);
             $this->shift_pattern = 'single';
             $this->include_weekends = false;
             
@@ -163,7 +168,8 @@ class AutoGenerate extends Component
         $this->reset([
             'tanggal_mulai', 
             'tanggal_selesai', 
-            'departemen_id', 
+            'departemen_id',
+            'lokasi_id', 
             'selected_shifts', 
             'karyawan_ids',
             'showError', 
@@ -185,9 +191,14 @@ class AutoGenerate extends Component
             ->orderBy('nama_shift')
             ->get();
 
+        $lokasis = Lokasi::where('status', 'active')
+            ->orderBy('nama_lokasi')
+            ->get();
+
         return view('livewire.admin.jadwal.modals.auto-generate', [
             'departemens' => $departemens,
             'shifts' => $shifts,
+            'lokasis' => $lokasis,
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <div>
     <!-- Main Card -->
-    <div class="card bg-base-300 border border-base-100">
+    <div class="card bg-base-100 border border-base-300">
         <div class="card-body">
             <!-- Top Section: Search & Actions -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
@@ -25,7 +25,7 @@
                             @endif
                         </label>
                         <div tabindex="0"
-                            class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-300 border border-base-100 mt-2">
+                            class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-100 border border-base-300 mt-2">
                             <div class="space-y-3">
                                 <div class="form-control">
                                     <label class="label">
@@ -46,10 +46,7 @@
                 </div>
 
                 <!-- Right: Create Button -->
-                <button class="btn btn-primary btn-sm gap-2">
-                    <x-heroicon-o-plus class="w-5 h-5" />
-                    Tambah Lokasi
-                </button>
+                <livewire:admin.lokasi.modals.create />
             </div>
 
             <!-- Table Section -->
@@ -84,11 +81,11 @@
                             </div>
                         </td>
                         <td>
-                            <span class="badge badge-info badge-sm">{{ $lokasi->radius_meter }} meter</span>
+                            <span class="badge badge-info badge-soft badge-sm">{{ $lokasi->radius_meter }} meter</span>
                         </td>
                         <td>
                             <span
-                                class="badge badge-sm
+                                class="badge badge-sm badge-soft
                                 {{ $lokasi->status === 'active' ? 'badge-success' : 'badge-error' }}">
                                 {{ ucfirst($lokasi->status) }}
                             </span>
@@ -98,7 +95,7 @@
                                 <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
                                     <x-heroicon-o-ellipsis-vertical class="w-5 h-5" />
                                 </label>
-                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-300 rounded-box w-52 border border-base-100 z-50">
+                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300 z-50">
                                     <li>
                                         <button onclick="viewMapModal{{ $lokasi->id }}.showModal()" class="flex items-center gap-2">
                                             <x-heroicon-o-map class="w-4 h-4" />
@@ -106,13 +103,13 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="flex items-center gap-2">
+                                        <button wire:click="$dispatch('edit-lokasi', {id: {{ $lokasi->id }}})" class="flex items-center gap-2">
                                             <x-heroicon-o-pencil class="w-4 h-4" />
                                             <span>Edit</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="flex items-center gap-2 text-error hover:bg-error hover:text-error-content">
+                                        <button wire:click="$dispatch('delete-lokasi', {id: {{ $lokasi->id }}})" class="flex items-center gap-2 text-error hover:bg-error hover:text-error-content">
                                             <x-heroicon-o-trash class="w-4 h-4" />
                                             <span>Hapus</span>
                                         </button>
@@ -148,6 +145,10 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modals -->
+    <livewire:admin.lokasi.modals.edit />
+    <livewire:admin.lokasi.modals.delete />
     
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

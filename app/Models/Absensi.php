@@ -12,10 +12,15 @@ class Absensi extends Model
         'karyawan_id',
         'lokasi_id',
         'tanggal',
-        'waktu_masuk',
-        'waktu_keluar',
+        'jam_masuk',
+        'jam_pulang',
+        'lat_masuk',
+        'long_masuk',
+        'lat_keluar',
+        'long_keluar',
+        'foto_masuk',
+        'foto_keluar',
         'status',
-        'keterangan',
     ];
 
     // relasi ke table karyawans

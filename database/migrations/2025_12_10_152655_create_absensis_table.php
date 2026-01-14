@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->string('foto_masuk')->nullable();
             $table->string('foto_keluar')->nullable();
 
-            $table->enum('status', ['tepat_waktu', 'terlambat', 'izin', 'cuti', 'alpha'])->default('alpha');
+            $table->enum('status', ['hadir', 'tepat_waktu', 'terlambat', 'izin', 'cuti', 'alpha'])->default('alpha');
 
             $table->unique(['karyawan_id', 'tanggal']);
             $table->timestamps();

@@ -1,6 +1,6 @@
 <div>
     <dialog id="modal_auto_generate_jadwal" class="modal" wire:ignore.self>
-        <div class="modal-box max-w-3xl">
+        <div class="modal-box max-w-3xl border border-base-300">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
             </form>
@@ -90,6 +90,22 @@
                             @endforeach
                         </div>
                         @error('selected_shifts')
+                            <p class="text-error text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </fieldset>
+
+                    {{-- LOKASI --}}
+                    <fieldset class="col-span-2">
+                        <legend class="fieldset-legend">LOKASI <span class="text-error">*</span></legend>
+                        <select wire:model="lokasi_id" class="select select-bordered w-full @error('lokasi_id') select-error @enderror">
+                            <option value="">Pilih Lokasi</option>
+                            @foreach($lokasis as $lokasi)
+                                <option value="{{ $lokasi->id }}">
+                                    {{ $lokasi->nama_lokasi }} ({{ $lokasi->radius_meter }}m)
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('lokasi_id')
                             <p class="text-error text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </fieldset>

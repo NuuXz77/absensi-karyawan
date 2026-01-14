@@ -4,7 +4,7 @@
         <span class="hidden sm:inline">Tambah Departemen</span>
     </button>
     <dialog id="modal_create_departemen" class="modal" wire:ignore.self>
-        <div class="modal-box">
+        <div class="modal-box border border-base-300">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
             </form>

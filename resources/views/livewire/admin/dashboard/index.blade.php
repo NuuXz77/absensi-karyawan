@@ -1,7 +1,7 @@
 <div>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
         <!-- Total Karyawan -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Karyawan Aktif -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Hadir Hari Ini -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
@@ -46,7 +46,7 @@
         </div>
 
         <!-- Izin & Cuti -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <div class="flex items-center justify-between">
                     <div>
@@ -64,7 +64,7 @@
     <!-- Recent Activity & Pending Approvals -->
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <!-- Recent Absensi -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <h3 class="card-title flex items-center gap-2">
                     <x-heroicon-o-clock class="w-5 h-5 text-primary" />
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Pending Approvals -->
-        <div class="card bg-base-300 border border-base-100">
+        <div class="card bg-base-100 border border-base-300">
             <div class="card-body">
                 <h3 class="card-title flex items-center gap-2">
                     <x-heroicon-o-bell-alert class="w-5 h-5 text-warning" />

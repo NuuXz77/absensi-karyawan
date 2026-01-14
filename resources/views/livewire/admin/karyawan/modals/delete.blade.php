@@ -1,5 +1,5 @@
 <div>
-    <dialog id="modal_delete_karyawan" class="modal" wire:ignore.self>
+    <dialog id="modal_delete_karyawan" class="modal border-base-300" wire:ignore.self>
         <div class="modal-box">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
@@ -13,7 +13,7 @@
                 <p class="text-base mb-4">Apakah Anda yakin ingin menghapus karyawan ini?</p>
                 
                 @if($karyawan)
-                    <div class="bg-base-200 p-4 rounded-lg space-y-2">
+                    <div class="bg-base-100 border border-base-300 p-4 rounded-lg space-y-2">
                         <div class="flex items-center gap-3">
                             <div class="avatar">
                                 <div class="mask mask-squircle w-16 h-16">

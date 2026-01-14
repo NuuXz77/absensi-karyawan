@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->enum('role', ['admin', 'karyawan']);
             $table->boolean('harus_mengganti_password')->default(true);
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
         });
 

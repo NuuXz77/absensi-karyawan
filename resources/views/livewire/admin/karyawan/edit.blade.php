@@ -5,7 +5,7 @@
             <div class="col-span-12">
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {{-- data pribadi --}}
-                    <div class="card bg-base-300 border border-base-100">
+                    <div class="card bg-base-100 border border-base-300">
                         <div class="card-body">
                             <h4 class="card-title text-base flex items-center gap-2 mb-4">
                                 <x-heroicon-o-identification class="w-5 h-5 text-primary" />
@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     {{-- foto karyawan --}}
-                    <div class="card bg-base-300 border border-base-100">
+                    <div class="card bg-base-100 border border-base-300">
                         <div class="card-body">
                             <h4 class="card-title text-base flex items-center gap-2 mb-4">
                                 <x-heroicon-o-camera class="w-5 h-5 text-primary" />
@@ -299,7 +299,7 @@
                     </div>
 
                     {{-- Informasi Karyawan --}}
-                    <div class="card bg-base-300 border border-base-100">
+                    <div class="card bg-base-100 border border-base-300">
                         <div class="card-body">
                             <h4 class="card-title text-base flex items-center gap-2 mb-4">
                                 <x-heroicon-o-briefcase class="w-5 h-5 text-primary" />
@@ -387,7 +387,7 @@
                     </div>
 
                     {{-- Informasi Akun untuk login --}}
-                    <div class="card bg-base-300 border border-base-100">
+                    <div class="card bg-base-100 border border-base-300">
                         <div class="card-body">
                             <h4 class="card-title text-base flex items-center gap-2 mb-4">
                                 <x-heroicon-o-user-circle class="w-5 h-5 text-primary" />

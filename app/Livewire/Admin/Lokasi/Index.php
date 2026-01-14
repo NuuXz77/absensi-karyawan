@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use App\Models\Lokasi;
 
 #[Layout('components.layouts.app')]
@@ -38,6 +39,14 @@ class Index extends Component
     {
         $this->search = '';
         $this->filterStatus = '';
+    }
+
+    #[On('lokasi-created')]
+    #[On('lokasi-updated')]
+    #[On('lokasi-deleted')]
+    public function refreshData()
+    {
+        $this->resetPage();
     }
 
     #[Title('Data Lokasi')]

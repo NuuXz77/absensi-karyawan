@@ -1,5 +1,5 @@
 <div>
-    <div class="card bg-base-300 border border-base-100">
+    <div class="card bg-base-100 border border-base-300">
         <div class="card-body">
             <!-- Top Section -->
             <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">

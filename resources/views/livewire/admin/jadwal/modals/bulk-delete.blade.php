@@ -1,6 +1,6 @@
 <div>
     <dialog id="modal_bulk_delete_jadwal" class="modal" wire:ignore.self>
-        <div class="modal-box max-w-2xl">
+        <div class="modal-box max-w-2xl border border-base-300">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
             </form>
@@ -67,7 +67,7 @@
                     {{-- CONFIRMATION --}}
                     <fieldset class="col-span-2">
                         <legend class="fieldset-legend">KONFIRMASI (Ketik "HAPUS" untuk melanjutkan)</legend>
-                        <input type="text" wire:model="confirmText" 
+                        <input type="text" wire:model.live="confirmText" 
                                class="input input-bordered w-full @error('confirmText') input-error @enderror" 
                                placeholder="Ketik HAPUS untuk konfirmasi"
                                autocomplete="off" />
