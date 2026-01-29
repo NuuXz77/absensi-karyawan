@@ -90,7 +90,8 @@
                             </span>
                         </td>
                         <td>
-                            <x-partials.dropdown-actions :id="$shift->id" />
+                            <x-partials.dropdown-actions :id="$shift->id" editModalId="modal_edit_shift"
+                                deleteModalId="modal_delete_shift" />
                         </td>
                     </tr>
                 @endforeach

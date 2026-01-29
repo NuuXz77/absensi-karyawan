@@ -49,6 +49,21 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function view($id)
+    {
+        $this->dispatch('view-lokasi', id: $id);
+    }
+
+    public function edit($id)
+    {
+        $this->dispatch('edit-lokasi', id: $id);
+    }
+
+    public function confirmDelete($id)
+    {
+        $this->dispatch('delete-lokasi', id: $id);
+    }
+
     #[Title('Data Lokasi')]
     public function render()
     {

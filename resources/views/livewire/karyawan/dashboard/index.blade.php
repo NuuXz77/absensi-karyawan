@@ -107,46 +107,6 @@
             </div>
         </div>
 
-        {{-- Ringkasan Absen Bulan Berjalan --}}
-        <div class="card bg-base-100 border border-base-300">
-            <div class="card-body">
-                <h2 class="card-title text-lg">
-                    <x-heroicon-o-chart-bar class="w-5 h-5" />
-                    Ringkasan Absen {{ \Carbon\Carbon::now()->isoFormat('MMMM YYYY') }}
-                </h2>
-                
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                    {{-- Hadir --}}
-                    <div class="stat bg-success/20 rounded-lg p-3">
-                        <div class="stat-title text-xs">Hadir</div>
-                        <div class="stat-value text-2xl text-success">{{ $absensiHadir }}</div>
-                        <div class="stat-desc">Hari</div>
-                    </div>
-                    
-                    {{-- Izin --}}
-                    <div class="stat bg-info/20 rounded-lg p-3">
-                        <div class="stat-title text-xs">Izin</div>
-                        <div class="stat-value text-2xl text-info">{{ $izinBulanIni }}</div>
-                        <div class="stat-desc">Hari</div>
-                    </div>
-                    
-                    {{-- Cuti/Sakit --}}
-                    <div class="stat bg-warning/20 rounded-lg p-3">
-                        <div class="stat-title text-xs">Cuti</div>
-                        <div class="stat-value text-2xl text-warning">{{ $cutiBulanIni }}</div>
-                        <div class="stat-desc">Hari</div>
-                    </div>
-                    
-                    {{-- Alpha --}}
-                    <div class="stat bg-error/20 rounded-lg p-3">
-                        <div class="stat-title text-xs">Alpha</div>
-                        <div class="stat-value text-2xl text-error">{{ $alphaBulanIni }}</div>
-                        <div class="stat-desc">Hari</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         {{-- Notifikasi --}}
         <div class="card bg-base-100 border border-base-300">
             <div class="card-body">

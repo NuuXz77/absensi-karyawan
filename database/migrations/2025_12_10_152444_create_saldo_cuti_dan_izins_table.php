@@ -10,10 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('saldo_cuti', function (Blueprint $table) {
+        Schema::create('saldo_cuti_dan_izin', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawan')->cascadeOnDelete();
-
+            $table->integer('total_izin');
+            $table->integer('sisa_izin');
             $table->integer('total_cuti');
             $table->integer('sisa_cuti');
             $table->integer('tahun');

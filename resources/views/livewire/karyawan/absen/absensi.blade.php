@@ -659,7 +659,7 @@
                     </div>
                 @endif
 
-                <a href="{{ route('karyawan.absen') }}" wire:navigate class="btn btn-primary btn-lg w-full gap-2">
+                <a href="{{ route('karyawan.absen.index') }}" wire:navigate class="btn btn-primary btn-lg w-full gap-2">
                     <x-heroicon-o-arrow-left class="w-5 h-5" />
                     Kembali ke Halaman Absen
                 </a>

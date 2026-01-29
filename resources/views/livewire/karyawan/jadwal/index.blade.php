@@ -1,6 +1,58 @@
 <div>
     <div class="space-y-4">
         
+        {{-- SECTION 4 — Ringkasan Bulanan --}}
+        <div class="card bg-base-100 border border-base-300">
+            <div class="card-body p-4 md:p-6">
+                <h2 class="card-title text-base md:text-lg mb-3 md:mb-4">
+                    <x-heroicon-o-chart-bar class="w-4 h-4 md:w-5 md:h-5" />
+                    Ringkasan {{ Carbon\Carbon::create($selectedYear, $selectedMonth)->locale('id')->isoFormat('MMMM YYYY') }}
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                    {{-- Total Hari Kerja --}}
+                    <div class="stat bg-info/10 rounded-lg p-3 md:p-4 border border-info/20">
+                        <div class="stat-figure text-info">
+                            <x-heroicon-o-briefcase class="w-6 h-6 md:w-8 md:h-8" />
+                        </div>
+                        <div class="stat-title text-[10px] md:text-xs">Hari Kerja</div>
+                        <div class="stat-value text-lg md:text-3xl text-info">{{ $totalHariKerja }}</div>
+                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
+                    </div>
+                    
+                    {{-- Total Libur --}}
+                    <div class="stat bg-error/10 rounded-lg p-3 md:p-4 border border-error/20">
+                        <div class="stat-figure text-error">
+                            <x-heroicon-o-calendar class="w-6 h-6 md:w-8 md:h-8" />
+                        </div>
+                        <div class="stat-title text-[10px] md:text-xs">Libur</div>
+                        <div class="stat-value text-lg md:text-3xl text-error">{{ $totalLibur }}</div>
+                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
+                    </div>
+                    
+                    {{-- Total Cuti --}}
+                    <div class="stat bg-warning/10 rounded-lg p-3 md:p-4 border border-warning/20">
+                        <div class="stat-figure text-warning">
+                            <x-heroicon-o-calendar-days class="w-6 h-6 md:w-8 md:h-8" />
+                        </div>
+                        <div class="stat-title text-[10px] md:text-xs">Cuti</div>
+                        <div class="stat-value text-lg md:text-3xl text-warning">{{ $totalCuti }}</div>
+                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
+                    </div>
+                    
+                    {{-- Total Izin --}}
+                    <div class="stat bg-secondary/10 rounded-lg p-3 md:p-4 border border-secondary/20">
+                        <div class="stat-figure text-secondary">
+                            <x-heroicon-o-exclamation-circle class="w-6 h-6 md:w-8 md:h-8" />
+                        </div>
+                        <div class="stat-title text-[10px] md:text-xs">Izin</div>
+                        <div class="stat-value text-lg md:text-3xl text-secondary">{{ $totalIzin }}</div>
+                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- SECTION 1 — Jadwal Hari Ini (Primary Focus) --}}
         <div class="card bg-base-100 border border-base-300 shadow-lg">
             <div class="card-body p-4 md:p-6">
@@ -343,58 +395,6 @@
                             <div class="w-3 h-3 bg-error border border-error rounded"></div>
                             <span>Izin</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- SECTION 4 — Ringkasan Bulanan --}}
-        <div class="card bg-base-100 border border-base-300">
-            <div class="card-body p-4 md:p-6">
-                <h2 class="card-title text-base md:text-lg mb-3 md:mb-4">
-                    <x-heroicon-o-chart-bar class="w-4 h-4 md:w-5 md:h-5" />
-                    Ringkasan {{ Carbon\Carbon::create($selectedYear, $selectedMonth)->locale('id')->isoFormat('MMMM YYYY') }}
-                </h2>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-                    {{-- Total Hari Kerja --}}
-                    <div class="stat bg-info/10 rounded-lg p-3 md:p-4 border border-info/20">
-                        <div class="stat-figure text-info">
-                            <x-heroicon-o-briefcase class="w-6 h-6 md:w-8 md:h-8" />
-                        </div>
-                        <div class="stat-title text-[10px] md:text-xs">Hari Kerja</div>
-                        <div class="stat-value text-lg md:text-3xl text-info">{{ $totalHariKerja }}</div>
-                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
-                    </div>
-                    
-                    {{-- Total Libur --}}
-                    <div class="stat bg-error/10 rounded-lg p-3 md:p-4 border border-error/20">
-                        <div class="stat-figure text-error">
-                            <x-heroicon-o-calendar class="w-6 h-6 md:w-8 md:h-8" />
-                        </div>
-                        <div class="stat-title text-[10px] md:text-xs">Libur</div>
-                        <div class="stat-value text-lg md:text-3xl text-error">{{ $totalLibur }}</div>
-                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
-                    </div>
-                    
-                    {{-- Total Cuti --}}
-                    <div class="stat bg-warning/10 rounded-lg p-3 md:p-4 border border-warning/20">
-                        <div class="stat-figure text-warning">
-                            <x-heroicon-o-calendar-days class="w-6 h-6 md:w-8 md:h-8" />
-                        </div>
-                        <div class="stat-title text-[10px] md:text-xs">Cuti</div>
-                        <div class="stat-value text-lg md:text-3xl text-warning">{{ $totalCuti }}</div>
-                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
-                    </div>
-                    
-                    {{-- Total Izin --}}
-                    <div class="stat bg-secondary/10 rounded-lg p-3 md:p-4 border border-secondary/20">
-                        <div class="stat-figure text-secondary">
-                            <x-heroicon-o-exclamation-circle class="w-6 h-6 md:w-8 md:h-8" />
-                        </div>
-                        <div class="stat-title text-[10px] md:text-xs">Izin</div>
-                        <div class="stat-value text-lg md:text-3xl text-secondary">{{ $totalIzin }}</div>
-                        <div class="stat-desc text-[9px] md:text-xs">Hari</div>
                     </div>
                 </div>
             </div>

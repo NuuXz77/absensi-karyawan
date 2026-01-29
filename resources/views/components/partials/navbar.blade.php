@@ -60,7 +60,7 @@
 
         <label class="swap swap-rotate">
             <!-- this hidden checkbox controls the state -->
-            <input type="checkbox" class="theme-controller" value="dark" />
+            <input type="checkbox" class="theme-controller" value="light" />
 
             <!-- sun icon -->
             <svg class="swap-off h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -7,21 +7,39 @@
                 <!-- Left: Search & Filter -->
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <!-- Search Input -->
-                    <label class="input input-sm">
-                        <x-bi-search class="w-3" />
-                        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari departemen..." />
-                    </label>
+                    <div class="form-control">
+                        <label class="input input-sm">
+                            <x-bi-search class="w-3" />
+                            <input type="text" wire:model.live.debounce.300ms="search"
+                                placeholder="Cari departemen..." />
+                        </label>
+                    </div>
 
-                    <!-- Filter Status -->
-                    <select wire:model.live="filterStatus" class="select select-bordered select-sm">
-                        <option value="">Semua Status</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Non-Aktif</option>
-                    </select>
-
-                    <button wire:click="resetFilters" class="btn btn-sm btn-ghost">
-                        <x-heroicon-o-arrow-path class="w-4 h-4" />
-                    </button>
+                    <!-- Filter Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-sm gap-2">
+                            <x-heroicon-o-funnel class="w-5 h-5" />
+                            Filter
+                            @if ($filterStatus)
+                                <span class="badge badge-primary badge-sm">1</span>
+                            @endif
+                        </label>
+                        <div tabindex="0"
+                            class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-100 border border-base-300 mt-2">
+                            <div class="space-y-3">
+                                <div class="form-control">
+                                    <label class="label"><span class="label-text font-semibold">Status</span></label>
+                                    <select wire:model.live="filterStatus" class="select select-bordered select-sm">
+                                        <option value="">Semua Status</option>
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Non-Aktif</option>
+                                    </select>
+                                </div>
+                                <button wire:click="resetFilters" class="btn btn-ghost btn-sm w-full">Reset
+                                    Filter</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right: Create Button -->
@@ -73,7 +91,8 @@
                             </span>
                         </td>
                         <td>
-                            <x-partials.dropdown-actions :id="$departemen->id" />
+                            <x-partials.dropdown-actions :id="$departemen->id" editModalId="modal_edit_departemen"
+                                deleteModalId="modal_delete_departemen" />
                         </td>
                     </tr>
                 @endforeach

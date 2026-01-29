@@ -8,7 +8,10 @@ use Livewire\Component;
 class Delete extends Component
 {
     public $jabatanId;
-    public $jabatan;
+    public $nama_jabatan = '';
+    public $kode_jabatan = '';
+    public $departemen_nama = '';
+    public $karyawan_count = 0;
 
     public $showSuccess = false;
     public $showError = false;
@@ -19,9 +22,14 @@ class Delete extends Component
     public function loadJabatan($id)
     {
         $this->jabatanId = $id;
-        $this->jabatan = Jabatan::with('departemen')
+        $jabatan = Jabatan::with('departemen')
             ->withCount('karyawans')
             ->findOrFail($id);
+        
+        $this->nama_jabatan = $jabatan->nama_jabatan;
+        $this->kode_jabatan = $jabatan->kode_jabatan;
+        $this->departemen_nama = $jabatan->departemen->nama_departemen ?? 'Semua Departemen';
+        $this->karyawan_count = $jabatan->karyawans_count ?? 0;
         
         $this->showSuccess = false;
         $this->showError = false;
@@ -36,7 +44,7 @@ class Delete extends Component
             $jabatan = Jabatan::findOrFail($this->jabatanId);
             
             // Check if has karyawan
-            if ($jabatan->karyawans()->count() > 0) {
+            if ($this->karyawan_count > 0) {
                 $this->showError = true;
                 $this->errorMessage = 'Tidak dapat menghapus jabatan yang masih memiliki karyawan!';
                 return;
@@ -59,7 +67,7 @@ class Delete extends Component
 
     public function closeModal()
     {
-        $this->reset(['jabatanId', 'jabatan', 'showError', 'errorMessage']);
+        $this->reset(['jabatanId', 'nama_jabatan', 'kode_jabatan', 'departemen_nama', 'karyawan_count', 'showError', 'errorMessage']);
         $this->dispatch('close-delete-modal');
     }
 

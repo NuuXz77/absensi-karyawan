@@ -7,29 +7,45 @@
                 <!-- Left: Search & Filter -->
                 <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <!-- Search Input -->
-                    <label class="input input-sm">
-                        <x-bi-search class="w-3" />
-                        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari jabatan..." />
-                    </label>
+                    <div class="form-control">
+                        <label class="input input-sm">
+                            <x-bi-search class="w-3" />
+                            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari jabatan..." />
+                        </label>
+                    </div>
 
-                    <!-- Filter Departemen -->
-                    <select wire:model.live="filterDepartemen" class="select select-bordered select-sm">
-                        <option value="">Semua Departemen</option>
-                        @foreach ($departemens as $departemen)
-                            <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
-                        @endforeach
-                    </select>
-
-                    <!-- Filter Status -->
-                    <select wire:model.live="filterStatus" class="select select-bordered select-sm">
-                        <option value="">Semua Status</option>
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Non-Aktif</option>
-                    </select>
-
-                    <button wire:click="resetFilters" class="btn btn-sm btn-ghost">
-                        <x-heroicon-o-arrow-path class="w-4 h-4" />
-                    </button>
+                    <!-- Filter Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-sm gap-2">
+                            <x-heroicon-o-funnel class="w-5 h-5" />
+                            Filter
+                            @if ($filterDepartemen || $filterStatus)
+                                <span class="badge badge-primary badge-sm">{{ ($filterDepartemen ? 1 : 0) + ($filterStatus ? 1 : 0) }}</span>
+                            @endif
+                        </label>
+                        <div tabindex="0" class="dropdown-content z-10 card card-compact w-64 p-4 bg-base-100 border border-base-300 mt-2">
+                            <div class="space-y-3">
+                                <div class="form-control">
+                                    <label class="label"><span class="label-text font-semibold">Departemen</span></label>
+                                    <select wire:model.live="filterDepartemen" class="select select-bordered select-sm">
+                                        <option value="">Semua Departemen</option>
+                                        @foreach ($departemens as $departemen)
+                                            <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label"><span class="label-text font-semibold">Status</span></label>
+                                    <select wire:model.live="filterStatus" class="select select-bordered select-sm">
+                                        <option value="">Semua Status</option>
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Non-Aktif</option>
+                                    </select>
+                                </div>
+                                <button wire:click="resetFilters" class="btn btn-ghost btn-sm w-full">Reset Filter</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right: Create Button -->
@@ -87,7 +103,8 @@
                             </span>
                         </td>
                         <td>
-                            <x-partials.dropdown-actions :id="$jabatan->id" />
+                            <x-partials.dropdown-actions :id="$jabatan->id" editModalId="modal_edit_jabatan"
+                                deleteModalId="modal_delete_jabatan"/>
                         </td>
                     </tr>
                 @endforeach

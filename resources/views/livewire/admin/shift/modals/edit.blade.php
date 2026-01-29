@@ -1,4 +1,4 @@
-<div>
+<div x-data="modal('modal_edit_shift')">
     <dialog id="modal_edit_shift" class="modal" wire:ignore.self>
         <div class="modal-box max-w-2xl border border-base-300">
             <form method="dialog">
@@ -109,7 +109,7 @@
         @endif
     </div>
 </div>
-
+{{-- 
 <script>
     document.addEventListener('livewire:init', () => {
         Livewire.on('open-edit-modal', () => {
@@ -120,4 +120,4 @@
             document.getElementById('modal_edit_shift').close();
         });
     });
-</script>
+</script> --}}

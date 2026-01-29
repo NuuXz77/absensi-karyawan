@@ -47,9 +47,9 @@ class Karyawan extends Model
         return $this->hasMany(Cuti::class);
     }
 
-    public function saldoCuti()
+    public function saldoCutiDanIzin()
     {
-        return $this->hasMany(SaldoCuti::class);
+        return $this->hasMany(SaldoCutiDanIzin::class);
     }
 
     public function jadwalKerja()

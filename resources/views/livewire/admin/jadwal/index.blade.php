@@ -17,20 +17,11 @@
                     <button wire:click="today" class="btn btn-sm btn-ghost">Hari Ini</button>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex gap-2">
-                    <button class="btn btn-success btn-sm gap-2" wire:click="$dispatch('open-auto-generate-modal')">
-                        <x-heroicon-o-sparkles class="w-5 h-5" />
-                        <span class="hidden sm:inline">Auto Generate Jadwal</span>
-                    </button>
-                    <button class="btn btn-primary btn-sm gap-2" wire:click="$dispatch('open-create-modal')">
-                        <x-heroicon-o-plus class="w-5 h-5" />
-                        <span class="hidden sm:inline">Tambah Jadwal</span>
-                    </button>
-                    <button class="btn btn-error btn-sm gap-2" wire:click="$dispatch('open-bulk-delete-modal')">
-                        <x-heroicon-o-trash class="w-5 h-5" />
-                        <span class="hidden sm:inline">Hapus Jadwal Massal</span>
-                    </button>
+                <div class="flex items-center gap-2">
+                    <!-- Action Buttons -->
+                    <livewire:admin.jadwal.modals.auto-generate />
+                    <livewire:admin.jadwal.modals.create />
+                    <livewire:admin.jadwal.modals.bulk-delete />
                 </div>
             </div>
 
@@ -83,12 +74,14 @@
             @if (!$filterLokasi || !$filterDepartemen)
                 <div class="alert alert-info">
                     <x-heroicon-o-information-circle class="w-6 h-6" />
-                    <span>Silakan pilih <strong>Lokasi</strong> dan <strong>Departemen</strong> terlebih dahulu untuk menampilkan jadwal.</span>
+                    <span>Silakan pilih <strong>Lokasi</strong> dan <strong>Departemen</strong> terlebih dahulu untuk
+                        menampilkan jadwal.</span>
                 </div>
             @endif
 
             <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-3 {{ (!$filterLokasi || !$filterDepartemen) ? 'opacity-30 pointer-events-none' : '' }}">
+            <div
+                class="grid grid-cols-7 gap-3 {{ !$filterLokasi || !$filterDepartemen ? 'opacity-30 pointer-events-none' : '' }}">
                 <!-- Days Header -->
                 @foreach (['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'] as $day)
                     <div
@@ -192,10 +185,12 @@
                         {{-- Cuti & Izin Badges --}}
                         @php
                             $cutiForDate = $cutisInMonth->filter(function ($cuti) use ($currentDate) {
-                                return $currentDate->between($cuti->tanggal_mulai, $cuti->tanggal_selesai);
+                                return $cuti->tanggal_mulai &&
+                                    $cuti->tanggal_selesai &&
+                                    $currentDate->between($cuti->tanggal_mulai, $cuti->tanggal_selesai);
                             });
                             $izinForDate = $izinsInMonth->filter(function ($izin) use ($currentDate) {
-                                return $currentDate->isSameDay($izin->tanggal);
+                                return $izin->tanggal && $currentDate->isSameDay($izin->tanggal);
                             });
                         @endphp
 
@@ -342,13 +337,4 @@
             </div>
         </div>
     </div>
-
-
-
-    {{-- Modal Components --}}
-    <livewire:admin.jadwal.modals.bulk-delete />
-    <livewire:admin.jadwal.modals.auto-generate />
-    <livewire:admin.jadwal.modals.create />
-    <livewire:admin.jadwal.modals.edit />
-    <livewire:admin.jadwal.modals.delete />
 </div>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Absensi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error { border-left-color: #dc3545; }
+        .success { border-left-color: #28a745; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 API Connection Test</h1>
+        <p>Test koneksi ke Laravel API Backend</p>
+
+        <!-- Test 1: Ping -->
+        <div class="test-section">
+            <h3>1. Test Ping (No Auth)</h3>
+            <button onclick="testPing()">Test Ping</button>
+            <div id="ping-result"></div>
+        </div>
+
+        <!-- Test 2: Login -->
+        <div class="test-section">
+            <h3>2. Test Login</h3>
+            <input type="text" id="username" placeholder="Username" value="">
+            <input type="password" id="password" placeholder="Password" value="">
+            <button onclick="testLogin()">Test Login</button>
+            <div id="login-result"></div>
+        </div>
+
+        <!-- Test 3: Me -->
+        <div class="test-section">
+            <h3>3. Test /me (Requires Login First)</h3>
+            <button onclick="testMe()" id="me-btn" disabled>Test /me</button>
+            <div id="me-result"></div>
+        </div>
+
+        <!-- Test 4: Server Check -->
+        <div class="test-section">
+            <h3>4. Server Info</h3>
+            <p>API URL: <strong>http://127.0.0.1:8000/api/v1</strong></p>
+            <p>Token: <code id="token-display">No token</code></p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
+
+        function showResult(elementId, data, isError = false) {
+            const el = document.getElementById(elementId);
+            el.className = `result ${isError ? 'error' : 'success'}`;
+            el.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testPing() {
+            try {
+                console.log('Testing ping...');
+                const response = await fetch(`${API_BASE_URL}/ping`);
+                const data = await response.json();
+                console.log('Ping response:', data);
+                showResult('ping-result', data);
+            } catch (error) {
+                console.error('Ping error:', error);
+                showResult('ping-result', {
+                    error: error.message,
+                    detail: 'Tidak dapat terhubung ke server. Pastikan Laravel server berjalan dengan: php artisan serve'
+                }, true);
+            }
+        }
+
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showResult('login-result', { error: 'Username dan password harus diisi!' }, true);
+                return;
+            }
+
+            try {
+                console.log('Testing login...');
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                console.log('Login response:', data);
+
+                if (data.success && data.data.token) {
+                    localStorage.setItem('token', data.data.token);
+                    document.getElementById('token-display').textContent = data.data.token.substring(0, 50) + '...';
+                    document.getElementById('me-btn').disabled = false;
+                    showResult('login-result', data);
+                } else {
+                    showResult('login-result', data, true);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showResult('login-result', {
+                    error: error.message,
+                    detail: 'Tidak dapat terhubung ke server atau terjadi kesalahan'
+                }, true);
+            }
+        }
+
+        async function testMe() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                showResult('me-result', { error: 'Login dulu untuk mendapatkan token!' }, true);
+                return;
+            }
+
+            try {
+                console.log('Testing /me...');
+                const response = await fetch(`${API_BASE_URL}/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                console.log('Me response:', data);
+                showResult('me-result', data);
+            } catch (error) {
+                console.error('Me error:', error);
+                showResult('me-result', {
+                    error: error.message,
+                    detail: 'Tidak dapat terhubung ke server atau token tidak valid'
+                }, true);
+            }
+        }
+
+        // Check token on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('token-display').textContent = token.substring(0, 50) + '...';
+                document.getElementById('me-btn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

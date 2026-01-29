@@ -55,9 +55,6 @@ class Create extends Component
         $this->showSuccess = false;
         $this->showError = false;
         
-        // Get status from checkbox
-        $this->status = request()->input('status') ? 'active' : 'inactive';
-        
         // Validasi input
         $this->validate();
 

@@ -11,3 +11,4 @@ Route::get('/', function () {
 
 Require __DIR__.'/auth.php';
 Require __DIR__.'/api.php';
+Require __DIR__.'/karyawan.php';

@@ -32,7 +32,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Absensi Routes
     Route::get('/admin/absensi', \App\Livewire\Admin\Absensi\Index::class)->name('admin.absensi.index');
-    Route::get('/admin/absensi/detail', \App\Livewire\Admin\Absensi\Detail::class)->name('admin.absensi.detail');
+    Route::get('/admin/absensi/{id}/detail', \App\Livewire\Admin\Absensi\Detail::class)->name('admin.absensi.detail');
 
     // Izin Routes
     Route::get('/admin/izin', \App\Livewire\Admin\Izin\Index::class)->name('admin.izin.index');
@@ -45,6 +45,12 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Jabatan Routes
     Route::get('/admin/jabatan', \App\Livewire\Admin\Jabatan\Index::class)->name('admin.jabatan.index');
+
+    // Saldo Cuti & Izin Routes
+    Route::get('/admin/saldo', \App\Livewire\Admin\Saldo\Index::class)->name('admin.saldo.index');
+
+    // Laporan Routes
+    Route::get('/admin/laporan', \App\Livewire\Admin\Laporan\Index::class)->name('admin.laporan.index');
 });
 
 Route::middleware('auth', 'role:karyawan')->group(function () {
@@ -60,6 +66,13 @@ Route::middleware('auth', 'role:karyawan')->group(function () {
 
     // Karyawan Menu
     Route::get('/menu', \App\Livewire\Karyawan\Menu\Index::class)->name('karyawan.menu.index');
+    Route::get('/menu/kehadiran/riwayat-absensi', \App\Livewire\Karyawan\Menu\Kehadiran\Absensi\RiwayatAbsensi::class)->name('karyawan.kehadiran.riwayat-absensi');
+    Route::get('/menu/kehadiran/riwayat-absensi/{id}', \App\Livewire\Karyawan\Menu\Kehadiran\Absensi\Detail\RiwayatAbsensi::class)->name('karyawan.kehadiran.riwayat-absensi.detail');
+    Route::get('/menu/kehadiran/riwayat-cuti', \App\Livewire\Karyawan\Menu\Kehadiran\RiwayatCuti\Index::class)->name('karyawan.kehadiran.riwayat-cuti');
+    Route::get('/menu/kehadiran/riwayat-izin', \App\Livewire\Karyawan\Menu\Kehadiran\RiwayatIzin\Index::class)->name('karyawan.kehadiran.riwayat-izin');
+    // Karyawan Izin & Cuti
+    Route::get('/menu/izin/create', \App\Livewire\Karyawan\Menu\Kehadiran\IzinCuti\Izin\Index::class)->name('karyawan.izin.create');
+    Route::get('/menu/cuti/create', \App\Livewire\Karyawan\Menu\Kehadiran\IzinCuti\Cuti\Index::class)->name('karyawan.cuti.create');
 
     // Karyawan Profile
     Route::get('/profile', \App\Livewire\Karyawan\Profile\Index::class)->name('karyawan.profile.index');

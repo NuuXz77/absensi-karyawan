@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use App\Models\Cuti;
 use App\Models\Karyawan;
-use Illuminate\Support\Facades\Auth;
 
 #[Layout('components.layouts.app')]
 class Index extends Component
@@ -21,6 +20,12 @@ class Index extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
     public $perPage = 10;
+
+    protected $listeners = [
+        'cuti-approved' => '$refresh',
+        'cuti-rejected' => '$refresh',
+        'cuti-deleted' => '$refresh',
+    ];
 
     public function updatingSearch()
     {
@@ -44,26 +49,24 @@ class Index extends Component
         $this->filterKaryawan = '';
     }
 
+    public function openDetailModal($id)
+    {
+        $this->dispatch('open-detail-modal', id: $id);
+    }
+
+    public function confirmDelete($id)
+    {
+        $this->dispatch('confirm-delete-cuti', id: $id);
+    }
+
     public function approve($id)
     {
-        $cuti = Cuti::findOrFail($id);
-        $cuti->update([
-            'status' => 'disetujui',
-            'disetujui_oleh' => Auth::id(),
-        ]);
-
-        session()->flash('success', 'Cuti berhasil disetujui!');
+        $this->dispatch('open-confirm-modal', id: $id, action: 'approve');
     }
 
     public function reject($id)
     {
-        $cuti = Cuti::findOrFail($id);
-        $cuti->update([
-            'status' => 'ditolak',
-            'disetujui_oleh' => Auth::id(),
-        ]);
-
-        session()->flash('success', 'Cuti ditolak!');
+        $this->dispatch('open-confirm-modal', id: $id, action: 'reject');
     }
 
     #[Title('Pengajuan Cuti')]

@@ -8,7 +8,10 @@ use Livewire\Component;
 class Delete extends Component
 {
     public $departemenId;
-    public $departemen;
+    public $nama_departemen = '';
+    public $kode_departemen = '';
+    public $status = '';
+    public $karyawan_count = 0;
 
     public $showSuccess = false;
     public $showError = false;
@@ -19,7 +22,12 @@ class Delete extends Component
     public function loadDepartemen($id)
     {
         $this->departemenId = $id;
-        $this->departemen = Departemen::withCount('karyawans')->findOrFail($id);
+        $departemen = Departemen::withCount('karyawans')->findOrFail($id);
+        
+        $this->nama_departemen = $departemen->nama_departemen;
+        $this->kode_departemen = $departemen->kode_departemen;
+        $this->status = ucfirst($departemen->status);
+        $this->karyawan_count = $departemen->karyawans_count ?? 0;
         
         $this->showSuccess = false;
         $this->showError = false;
@@ -63,7 +71,7 @@ class Delete extends Component
 
     public function closeModal()
     {
-        $this->reset(['departemenId', 'departemen', 'showError', 'errorMessage']);
+        $this->reset(['departemenId', 'nama_departemen', 'kode_departemen', 'status', 'karyawan_count', 'showError', 'errorMessage']);
         $this->dispatch('close-delete-modal');
     }
 

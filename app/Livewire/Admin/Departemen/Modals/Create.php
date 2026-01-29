@@ -27,17 +27,9 @@ class Create extends Component
         'kode_departemen.unique' => 'Kode departemen sudah digunakan',
     ];
 
-    public function openModal()
-    {
-        $this->resetValidation();
-        $this->showSuccess = false;
-        $this->showError = false;
-        $this->dispatch('open-create-modal');
-    }
-
     public function save()
     {
-        // Reset toast state setiap kali login dipanggil
+        // Reset toast state setiap kali save dipanggil
         $this->showSuccess = false;
         $this->showError = false;
 
@@ -53,8 +45,8 @@ class Create extends Component
 
             // Tampilkan toast success
             $this->showSuccess = true;
-            $this->showError = false;
             
+            // Reset form
             $this->reset(['nama_departemen', 'kode_departemen']);
             $this->status = 'active';
             $this->resetValidation();
@@ -62,20 +54,23 @@ class Create extends Component
             // Refresh parent component
             $this->dispatch('departemen-created');
             
-            // Close modal
+            // Close modal dengan event yang konsisten
             $this->dispatch('close-create-modal');
+            // return $this->redirect('/admin/departemen', navigate: true);
             
         } catch (\Exception $e) {
             // Jika gagal
             $this->showError = true;
-            $this->showSuccess = false;
             $this->errorMessage = 'Gagal menyimpan data: ' . $e->getMessage();
+            
+            // Tetap tutup modal jika diperlukan
+            $this->dispatch('close-create-modal');
         }
     }
 
     public function closeModal()
     {
-        $this->reset(['nama_departemen', 'kode_departemen', 'showError', 'errorMessage']);
+        $this->reset(['nama_departemen', 'kode_departemen', 'showError', 'errorMessage', 'showSuccess']);
         $this->status = 'active';
         $this->resetValidation();
         $this->dispatch('close-create-modal');

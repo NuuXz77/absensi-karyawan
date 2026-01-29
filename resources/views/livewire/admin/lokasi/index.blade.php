@@ -10,8 +10,7 @@
                     <div class="form-control">
                         <label class="input input-sm">
                             <x-bi-search class="w-3" />
-                            <input type="text" wire:model.live.debounce.300ms="search"
-                                placeholder="Cari lokasi..." />
+                            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari lokasi..." />
                         </label>
                     </div>
 
@@ -48,6 +47,12 @@
                 <!-- Right: Create Button -->
                 <livewire:admin.lokasi.modals.create />
             </div>
+
+            <!-- Modals -->
+            <livewire:admin.lokasi.modals.detail />
+            <livewire:admin.lokasi.modals.edit />
+            <livewire:admin.lokasi.modals.delete />
+
 
             <!-- Table Section -->
             @php
@@ -91,51 +96,10 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <div class="dropdown dropdown-end">
-                                <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
-                                    <x-heroicon-o-ellipsis-vertical class="w-5 h-5" />
-                                </label>
-                                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300 z-50">
-                                    <li>
-                                        <button onclick="viewMapModal{{ $lokasi->id }}.showModal()" class="flex items-center gap-2">
-                                            <x-heroicon-o-map class="w-4 h-4" />
-                                            <span>Lihat Peta</span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button wire:click="$dispatch('edit-lokasi', {id: {{ $lokasi->id }}})" class="flex items-center gap-2">
-                                            <x-heroicon-o-pencil class="w-4 h-4" />
-                                            <span>Edit</span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button wire:click="$dispatch('delete-lokasi', {id: {{ $lokasi->id }}})" class="flex items-center gap-2 text-error hover:bg-error hover:text-error-content">
-                                            <x-heroicon-o-trash class="w-4 h-4" />
-                                            <span>Hapus</span>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <x-partials.dropdown-actions :id="$lokasi->id" showView="true"
+                                editModalId="modal_edit_lokasi" deleteModalId="modal_delete_lokasi" detailModalId="modal_detail_lokasi"/>
                         </td>
                     </tr>
-
-                    <!-- Map Modal for each location -->
-                    <dialog id="viewMapModal{{ $lokasi->id }}" class="modal">
-                        <div class="modal-box w-11/12 max-w-3xl">
-                            <form method="dialog">
-                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                            </form>
-                            <h3 class="font-bold text-lg mb-4">{{ $lokasi->nama_lokasi }}</h3>
-                            <div id="map{{ $lokasi->id }}" class="w-full h-96 rounded-lg border border-base-300"></div>
-                            <div class="mt-4 text-sm">
-                                <p><strong>Koordinat:</strong> {{ number_format($lokasi->latitude, 6) }}, {{ number_format($lokasi->longitude, 6) }}</p>
-                                <p><strong>Radius:</strong> {{ $lokasi->radius_meter }} meter</p>
-                            </div>
-                        </div>
-                        <form method="dialog" class="modal-backdrop">
-                            <button>close</button>
-                        </form>
-                    </dialog>
                 @endforeach
             </x-partials.table>
 
@@ -145,16 +109,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- Modals -->
-    <livewire:admin.lokasi.modals.edit />
-    <livewire:admin.lokasi.modals.delete />
-    
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <script>
+
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             @foreach ($lokasis as $lokasi)
                 // Initialize map when modal is opened
@@ -162,16 +118,20 @@
                 if (modal{{ $lokasi->id }}) {
                     modal{{ $lokasi->id }}.addEventListener('show', function() {
                         setTimeout(() => {
-                            const map = L.map('map{{ $lokasi->id }}').setView([{{ $lokasi->latitude }}, {{ $lokasi->longitude }}], 15);
-                            
+                            const map = L.map('map{{ $lokasi->id }}').setView([
+                                {{ $lokasi->latitude }}, {{ $lokasi->longitude }}
+                            ], 15);
+
                             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                                 attribution: '© OpenStreetMap contributors'
                             }).addTo(map);
-    
+
                             // Add marker
-                            const marker = L.marker([{{ $lokasi->latitude }}, {{ $lokasi->longitude }}]).addTo(map);
+                            const marker = L.marker([{{ $lokasi->latitude }},
+                                {{ $lokasi->longitude }}
+                            ]).addTo(map);
                             marker.bindPopup('<b>{{ $lokasi->nama_lokasi }}</b>').openPopup();
-    
+
                             // Add radius circle
                             L.circle([{{ $lokasi->latitude }}, {{ $lokasi->longitude }}], {
                                 color: 'blue',
@@ -184,5 +144,5 @@
                 }
             @endforeach
         });
-    </script>
+    </script> --}}
 </div>

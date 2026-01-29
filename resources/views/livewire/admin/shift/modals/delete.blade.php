@@ -1,4 +1,4 @@
-<div>
+<div x-data="modal('modal_delete_shift')">
     <dialog id="modal_delete_shift" class="modal" wire:ignore.self>
         <div class="modal-box border border-base-300">
             <form method="dialog">
@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('livewire:init', () => {
         Livewire.on('confirm-delete', (event) => {
             document.getElementById('modal_delete_shift').showModal();
@@ -90,4 +90,4 @@
             document.getElementById('modal_delete_shift').close();
         });
     });
-</script>
+</script> --}}

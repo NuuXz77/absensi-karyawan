@@ -11,7 +11,10 @@ class Cuti extends Model
         'karyawan_id',
         'tanggal_mulai',
         'tanggal_selesai',
-        'alasan',
+        'jumlah_hari',
+        'jenis_cuti',
+        'keterangan',
+        'bukti_foto',
         'status',
         'disetujui_oleh',
     ];

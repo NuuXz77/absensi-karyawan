@@ -1,5 +1,5 @@
-<div>
-    <button class="btn btn-primary btn-sm gap-2" wire:click="openModal">
+<div x-data="modal('modal_create_shift')">
+    <button class="btn btn-primary btn-sm gap-2" @click="openModal()">
         <x-heroicon-o-plus class="w-5 h-5" />
         <span class="hidden sm:inline">Tambah Shift</span>
     </button>
@@ -114,7 +114,7 @@
     </div>
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('livewire:init', () => {
         Livewire.on('open-create-modal', () => {
             document.getElementById('modal_create_shift').showModal();
@@ -124,4 +124,4 @@
             document.getElementById('modal_create_shift').close();
         });
     });
-</script>
+</script> --}}

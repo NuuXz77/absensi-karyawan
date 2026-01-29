@@ -11,7 +11,9 @@ class Izin extends Model
         'karyawan_id',
         'tanggal_mulai',
         'tanggal_selesai',
-        'alasan',
+        'jenis_izin',
+        'keterangan',
+        'bukti_foto',
         'status',
         'disetujui_oleh',
     ];

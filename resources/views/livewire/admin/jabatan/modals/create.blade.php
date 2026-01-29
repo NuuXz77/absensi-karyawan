@@ -1,13 +1,15 @@
-<div>
-    <button class="btn btn-primary btn-sm gap-2" wire:click="openModal">
+<div x-data="modal('modal_create_jabatan')">
+    <button class="btn btn-primary btn-sm gap-2"
+        @click="openModal()">
         <x-heroicon-o-plus class="w-5 h-5" />
         <span class="hidden sm:inline">Tambah Jabatan</span>
     </button>
-    <dialog id="modal_create_jabatan" class="modal" wire:ignore.self>
-        <div class="modal-box max-w-2xl border border-base-300">
-            <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" wire:click="closeModal">✕</button>
-            </form>
+    @teleport('body')
+        <dialog id="modal_create_jabatan" class="modal" wire:ignore.self x-show="open">
+            <div class="modal-box max-w-2xl border border-base-300">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
             <h3 class="text-lg font-bold">Tambah Jabatan</h3>
             
             <form wire:submit.prevent="save">
@@ -63,10 +65,6 @@
 
                     <!-- Form Actions -->
                     <div class="col-span-2 flex justify-end gap-3 mt-6">
-                        <button type="button" wire:click="closeModal" class="btn btn-ghost btn-sm gap-2">
-                            <x-heroicon-o-x-mark class="w-5 h-5" />
-                            Batal
-                        </button>
                         <button type="submit" class="btn btn-primary gap-2 btn-sm" wire:loading.attr="disabled" wire:target="save">
                             <span wire:loading.remove wire:target="save" class="flex items-center gap-2">
                                 <x-heroicon-o-check class="w-5 h-5" />
@@ -82,32 +80,10 @@
             </form>
         </div>
     </dialog>
+    @endteleport
     
-    <div class="toast toast-start z-[9999]">
-        @if($showSuccess)
-            <div wire:key="success-{{ now()->timestamp }}" class="alert alert-success flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)">
-                <x-heroicon-o-check class="w-5" />
-                <span>Jabatan berhasil ditambahkan!</span>
-            </div>
-        @endif
-        
-        @if($showError)
-            <div wire:key="error-{{ now()->timestamp }}" class="alert alert-error flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
-                <x-heroicon-o-x-circle class="w-5"/>
-                <span>{{ $errorMessage ?: 'Gagal menyimpan data!' }}</span>
-            </div>
-        @endif
-    </div>
+    <x-partials.toast 
+        :success="$showSuccess ? 'Jabatan berhasil ditambahkan!' : null" 
+        :error="$showError ? ($errorMessage ?: 'Gagal menyimpan data!') : null" 
+    />
 </div>
-
-<script>
-    document.addEventListener('livewire:init', () => {
-        Livewire.on('open-create-modal', (event) => {
-            document.getElementById('modal_create_jabatan').showModal();
-        });
-        
-        Livewire.on('close-create-modal', () => {
-            document.getElementById('modal_create_jabatan').close();
-        });
-    });
-</script>

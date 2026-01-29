@@ -11,6 +11,8 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use App\Models\Lokasi;
 use Carbon\Carbon;
+use App\Exports\AbsensiExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.app')]
 class Index extends Component
@@ -46,6 +48,16 @@ class Index extends Component
         }
     }
 
+    public function exportEx()
+    {
+        return Excel::download(new AbsensiExport(), 'absensi.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        return Excel::download(new AbsensiExport(), 'absensi.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }
+
     public function resetFilters()
     {
         $this->search = '';
@@ -66,21 +78,21 @@ class Index extends Component
     public function render()
     {
         $absensis = Absensi::with(['karyawan', 'lokasi'])
-            ->when($this->search, function($query) {
-                $query->whereHas('karyawan', function($q) {
+            ->when($this->search, function ($query) {
+                $query->whereHas('karyawan', function ($q) {
                     $q->where('nama_lengkap', 'like', '%' . $this->search . '%');
                 });
             })
-            ->when($this->filterStatus, function($query) {
+            ->when($this->filterStatus, function ($query) {
                 $query->where('status', $this->filterStatus);
             })
-            ->when($this->filterKaryawan, function($query) {
+            ->when($this->filterKaryawan, function ($query) {
                 $query->where('karyawan_id', $this->filterKaryawan);
             })
-            ->when($this->filterLokasi, function($query) {
+            ->when($this->filterLokasi, function ($query) {
                 $query->where('lokasi_id', $this->filterLokasi);
             })
-            ->when($this->filterTanggal, function($query) {
+            ->when($this->filterTanggal, function ($query) {
                 $query->whereDate('tanggal', $this->filterTanggal);
             })
             ->orderBy($this->sortField, $this->sortDirection)

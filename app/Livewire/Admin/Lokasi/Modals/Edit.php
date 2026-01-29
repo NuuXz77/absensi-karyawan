@@ -54,13 +54,6 @@ class Edit extends Component
         $this->dispatch('openEditModal', ['latitude' => $lokasi->latitude, 'longitude' => $lokasi->longitude]);
     }
 
-    #[On('coordinatesUpdated')]
-    public function updateCoordinates($data)
-    {
-        $this->latitude = $data['latitude'];
-        $this->longitude = $data['longitude'];
-    }
-
     public function closeModal()
     {
         $this->reset(['lokasiId', 'nama_lokasi', 'latitude', 'longitude', 'radius_meter', 'status', 'showError', 'errorMessage']);
@@ -74,8 +67,8 @@ class Edit extends Component
         $this->showSuccess = false;
         $this->showError = false;
 
-        // Convert checkbox status to active/inactive
-        $this->status = $this->status ? 'active' : 'inactive';
+        // Status sudah dalam format 'active' atau 'inactive' dari blade
+        // Tidak perlu konversi lagi
 
         // Validasi input
         $this->validate();

@@ -1,20 +1,6 @@
 <div>
     <!-- Toast Notifications -->
-    <div class="toast toast-end z-[9999]">
-        @if(session('success'))
-            <div class="alert alert-success flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
-                <x-heroicon-o-check class="w-5" />
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-        
-        @if(session('error'))
-            <div class="alert alert-error flex flex-row items-center" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
-                <x-heroicon-o-x-circle class="w-5"/>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
-    </div>
+    <x-partials.toast :success="session('success')" :error="session('error')" />
 
     <!-- Main Card -->
     <div class="card bg-base-100 border border-base-300" style="overflow: visible !important;">
