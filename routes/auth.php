@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Livewire\Auth\Login;
 
 Route::middleware('guest')->group(function () {
@@ -9,8 +10,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth', 'role:admin')->group(function () {
-    Route::get('/admin/dashboard', \App\Livewire\Admin\Dashboard\Index::class)->name('admin.dashboard.index');
-
+    Route::get('/admin/dashboard', \App\Livewire\Admin\Dashboard\Index::class)->name('admin.dashboard.index');    
     // Absensi Routes
     Route::get('/admin/karyawan', \App\Livewire\Admin\Karyawan\Index::class)->name('admin.karyawan.index');
     Route::get('/admin/karyawan/create', \App\Livewire\Admin\Karyawan\Create::class)->name('admin.karyawan.create');
@@ -77,3 +77,12 @@ Route::middleware('auth', 'role:karyawan')->group(function () {
     // Karyawan Profile
     Route::get('/profile', \App\Livewire\Karyawan\Profile\Index::class)->name('karyawan.profile.index');
 });
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('login');
+})->middleware('auth')->name('logout');

@@ -219,7 +219,7 @@
     {{-- Logout Section --}}
     <div class="bg-base-100 border border-base-300 rounded-lg shadow-lg overflow-hidden">
         <div class="divide-y divide-base-300">
-            <form id="logout-form" method="POST" action="/logout" style="display: none;">
+            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                 @csrf
             </form>
             <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
