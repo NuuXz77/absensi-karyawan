@@ -1,31 +1,26 @@
 <?php
 
-namespace App\View\Components\partials;
+namespace App\View\Components;
 
+use App\Models\Cuti;
+use App\Models\Izin;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Models\Izin;
-use App\Models\Cuti;
 
-class sidebar extends Component
+class Sidebar extends Component
 {
-    public $pendingIzinCount;
-    public $pendingCutiCount;
-    public $totalPendingCount;
+    public int $pendingIzinCount;
+    public int $pendingCutiCount;
+    public int $totalPendingCount;
 
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        // Hitung jumlah izin dengan status pending
         $this->pendingIzinCount = Izin::where('status', 'pending')->count();
-        
-        // Hitung jumlah cuti dengan status pending
         $this->pendingCutiCount = Cuti::where('status', 'pending')->count();
-        
-        // Total pengajuan pending
         $this->totalPendingCount = $this->pendingIzinCount + $this->pendingCutiCount;
     }
 

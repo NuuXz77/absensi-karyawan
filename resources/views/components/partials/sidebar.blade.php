@@ -133,8 +133,8 @@
                             {{-- <x-heroicon-o-document-text class="w-5" /> --}}
                             <x-iconpark-permissions-o class="w-5" />
                             Pengajuan
-                            @if($totalPendingCount > 0)
-                                <span class="badge badge-warning badge-soft badge-xs">{{ $totalPendingCount }}</span>
+                            @if(($totalPendingCount ?? 0) > 0)
+                                <span class="badge badge-warning badge-soft badge-xs">{{ $totalPendingCount ?? 0 }}</span>
                             @endif
                         </summary>
                         <ul>
@@ -142,8 +142,8 @@
                                 <a wire:navigate href="{{ route('admin.izin.index') }}"
                                     class="{{ request()->routeIs('admin.izin.*') ? 'bg-base-300' : '' }}">
                                     Izin
-                                    @if($pendingIzinCount > 0)
-                                        <span class="badge badge-info badge-soft badge-xs">{{ $pendingIzinCount }}</span>
+                                    @if(($pendingIzinCount ?? 0) > 0)
+                                        <span class="badge badge-info badge-soft badge-xs">{{ $pendingIzinCount ?? 0 }}</span>
                                     @endif
                                 </a>
                             </li>
@@ -151,8 +151,8 @@
                                 <a wire:navigate href="{{ route('admin.cuti.index') }}"
                                     class="{{ request()->routeIs('admin.cuti.*') ? 'bg-base-300' : '' }}">
                                     Cuti
-                                    @if($pendingCutiCount > 0)
-                                        <span class="badge badge-secondary badge-soft badge-xs">{{ $pendingCutiCount }}</span>
+                                    @if(($pendingCutiCount ?? 0) > 0)
+                                        <span class="badge badge-secondary badge-soft badge-xs">{{ $pendingCutiCount ?? 0 }}</span>
                                     @endif
                                 </a>
                             </li>
