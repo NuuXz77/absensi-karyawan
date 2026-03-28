@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use Database\Seeders\UserSeeder;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -20,7 +21,9 @@ class Login extends Component
     #[Title('Login Page')] 
     public function render()
     {
-        return view('livewire.auth.login');
+        return view('livewire.auth.login', [
+            'demoAccounts' => UserSeeder::demoLoginAccounts(),
+        ]);
     }
 
     public function login()

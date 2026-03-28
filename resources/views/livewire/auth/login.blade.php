@@ -62,6 +62,36 @@
                     <a href="#" class="link link-primary text-sm">Lupa password?</a>
                 </div>
             </form>
+
+            <div class="mt-5 rounded-2xl border border-base-300 bg-base-100/80 p-4 shadow-sm">
+                <div class="mb-3">
+                    <h2 class="text-sm font-semibold text-base-content">Akun Demo</h2>
+                    <p class="text-xs text-base-content/60">Data ini mengikuti UserSeeder agar konsisten saat demo.</p>
+                </div>
+
+                <div class="space-y-2">
+                    @forelse($demoAccounts as $account)
+                        <div class="rounded-xl border border-base-300 p-3">
+                            <div class="mb-2 flex items-center justify-between">
+                                <span class="badge badge-outline">{{ $account['label'] }}</span>
+                                <button
+                                    type="button"
+                                    class="btn btn-ghost btn-xs"
+                                    x-on:click="$wire.set('username', @js($account['username'])); $wire.set('password', @js($account['password']))"
+                                >
+                                    Isi Otomatis
+                                </button>
+                            </div>
+                            <div class="text-sm text-base-content/80">Username: <span class="font-semibold">{{ $account['username'] }}</span></div>
+                            <div class="text-sm text-base-content/80">Password: <span class="font-semibold">{{ $account['password'] }}</span></div>
+                        </div>
+                    @empty
+                        <div class="rounded-xl border border-warning/30 bg-warning/10 p-3 text-xs text-warning-content">
+                            Akun demo belum tersedia. Jalankan seeder user terlebih dahulu.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </div>
         <div class="toast toast-start">
             @if($showSuccess)
